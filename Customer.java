@@ -8,7 +8,7 @@
  * Instructors: Professors Christine Forde and Harry Payne
  * @author Anna (Ekeren?)
  * @author Rafael Ferrer
- * @author Abhishek (Mhatre?)
+ * @author Abhishek Mhatre
  * @version 0, 06/06/16
  * 
  * Description: Customer Data Type Class - CSC 225 Prog1
@@ -22,7 +22,7 @@
  * 
  * @author Anna (Ekeren?)
  * @author Rafael Ferrer
- * @author Abhishek (Mhatre?)
+ * @author Abhishek Mhatre
  * @version 0, 06/08/16
  ********************************************************************************************************/
 
@@ -32,7 +32,7 @@ import java.text.DecimalFormat;
 public class Customer implements Comparable<Customer>
 {
 	// Invariant of the Customer class:
-	//   1. 
+	public static final double TRANSCATION_FEE = 1.50; 
 	//   2. 
 	//   3. 
 	//   4. 
@@ -275,67 +275,93 @@ public class Customer implements Comparable<Customer>
 	
 	/**
 	 * Description
-	 * @param
+	 * @param - amount
 	 *   
-	 * @precondition
+	 * @precondition previous balance
 	 *   
-	 * @postcondition / return
+	 * @postcondition / return - amount to be true or false (deposited amount)
 	 *   
-	 * @exception
+	 * @exception - amount cannot be deposited if amount is <= 0
 	 *   
-	 * @note
+	 * @note - deposits amount if amount is > 0
 	 *   
 	 **/
 	public boolean deposit(double amount)
 	{
-		boolean depositSuccessful = false;
-		
-		
-		
-		return depositSuccessful;
-		
-	}//End deposit(Long amount) Method
+		if(amount <= 0)
+		{
+			System.out.println("Error: Deposit amount is invalid."
+					+ "Customer:" + lastName
+					+ "Requested:" + amount
+					+ "where "  + lastName + "equals the customer's name"
+					+ amount + "equals the amount");
+			return false;
+		}
+		else
+		{
+			acctBalance += amount;
+			return true;
+		}
+	}//End deposit(double amount) Method
 	
 	/**
 	 * Description
-	 * @param
+	 * @param - amount (with TRANSCATION_FEE)
 	 *   
-	 * @precondition
+	 * @precondition - previous balance
 	 *   
-	 * @postcondition / return
+	 * @postcondition / return - amount value to be true or false (withdrawed amount)
 	 *   
-	 * @exception
+	 * @exception cannot withdraw amount if amount is < 0 or amount is > balance
 	 *   
-	 * @note
+	 * @note withdraws amount of amount is > 0 and amount is < 0
 	 *   
 	 **/
 	public boolean withdraw(double amount)
 	{
-		boolean withdrawSuccessful = false;
-		
-		
-		
-		return withdrawSuccessful;
-		
-	}//End withdraw(Long amount) Method
+		if(amount < 0)
+		{
+			System.out.println("Error: Withdraw amount is invalid."
+					+ "Customer:" + lastName
+					+ "Requested:" + amount
+					+ "where " + lastName + "equals the customer's name"
+					+ amount + "equals the amount");
+			return false;
+		}
+		else if(amount > acctBalance)
+		{
+			System.out.println("Error: Insufficient funds"
+					+ "Customer:" + lastName
+					+ "Requested:" + amount
+					+ "Available: " + acctBalance
+					+ "where " + lastName + "equals the customer's name"
+					+ amount + "equals the amount"
+					+ acctBalance + "equals the balance in the account");
+			return false;
+		}
+		else
+		{
+			acctBalance -= amount + TRANSCATION_FEE;
+			return true;
+		}
+	}//End withdraw(double amount) Method
 	
 	/**
 	 * Description
-	 * @param
+	 * @param - rate
 	 *   
-	 * @precondition
+	 * @precondition acctBalance without interest rate
 	 *   
 	 * @postcondition / return
 	 *   
 	 * @exception
 	 *   
-	 * @note
+	 * @note - sets the acctBalance (with interest rate)
 	 *   
 	 **/
-	public void addInterest()
+	public void addInterest(double rate)
 	{
-		
-		
+		acctBalance = acctBalance + (acctBalance * rate * 0.01);
 	}//End addInterest() Method
 	
 	
