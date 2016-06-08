@@ -40,9 +40,9 @@ public class Customer implements Comparable<Customer>
 	/// Private Instance Variables ///
 	
 	private String lastName;
-	private Long custNumber;
-	private Long acctBalance;
-	private Long phoneNumber;
+	private String custNumber;
+	private double acctBalance;
+	private String phoneNumber;
 	
 	
 	/// Constructors ///
@@ -63,9 +63,9 @@ public class Customer implements Comparable<Customer>
 	public Customer()
 	{
 		lastName = "";
-		custNumber = -1L; // How should we generate customer numbers?
-		acctBalance = 0L;
-		phoneNumber = 0L;
+		custNumber = ""; // How should we generate customer numbers?
+		acctBalance = 0;
+		phoneNumber = "";
 		
 	}//End Customer() Constructor
 	
@@ -82,10 +82,10 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public Customer(String nameLast, Long custNum, Long acctBal, Long phoneNum)
+	public Customer(String nameLast, String custNum, double acctBal, String phoneNum)
 	{
 		lastName = nameLast;
-		custNumber = custNum; // Should we generate unique customer numbers?
+		custNumber = custNum;
 		acctBalance = acctBal;
 		phoneNumber = phoneNum;
 		
@@ -126,7 +126,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public Long getCustNumber()
+	public String getCustNumber()
 	{
 		return custNumber;
 		
@@ -145,7 +145,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public Long getAcctBalance()
+	public double getAcctBalance()
 	{
 		return acctBalance;
 		
@@ -164,7 +164,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public Long getPhoneNumber()
+	public String getPhoneNumber()
 	{
 		return phoneNumber;
 		
@@ -226,7 +226,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public void setCustNum(Long newCustNum)
+	public void setCustNum(String newCustNum)
 	{
 		custNumber = newCustNum;
 		
@@ -245,7 +245,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public void setAcctBal(Long newLAcctBal)
+	public void setAcctBal(double newLAcctBal)
 	{
 		acctBalance = newLAcctBal;
 		
@@ -264,7 +264,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public void setPhoneNum(Long newPhoneNum)
+	public void setPhoneNum(String newPhoneNum)
 	{
 		phoneNumber = newPhoneNum;
 		
@@ -286,7 +286,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public boolean deposit(Long amount)
+	public boolean deposit(double amount)
 	{
 		boolean depositSuccessful = false;
 		
@@ -309,7 +309,7 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	public boolean withdraw(Long amount)
+	public boolean withdraw(double amount)
 	{
 		boolean withdrawSuccessful = false;
 		
@@ -339,7 +339,7 @@ public class Customer implements Comparable<Customer>
 	}//End addInterest() Method
 	
 	
-	/// Comparable Interface ///
+	/// Comparable Interface and Equals Method ///
 	
 	/**
 	 * A method that returns an integer comparison based on the lexicographical order of the customers last names.
@@ -364,5 +364,119 @@ public class Customer implements Comparable<Customer>
 		return comparison;
 		
 	}//End compareTo(Customer inputCustomer) Method
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   custNumber must be unique
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	public boolean equals(Object obj)
+	{
+		//Instance Variables
+		Customer candidate;
+		boolean isEqual = false;
+		
+		//Verify (1) That obj is of the Customer data type.
+		if (obj instanceof Customer){
+			candidate = (Customer) obj;
+			//Verify (2) That candidate has the same lastName and custNumber as the invoked DoubleArraySeq.
+			if (this.lastName.equals(candidate.lastName) && this.custNumber.equals(candidate.custNumber)){
+				isEqual = true;
+			}//end if
+		}//end if
+		return isEqual;
+	}//end equals(Object obj) Method
+	
+	
+	/// Driver Methods ///
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	private static void addNewCustomer()
+	{
+		/// Verify that the customer number is unique!!!! ///
+		
+	}//End addNewCustomer()v Method
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	private static void deleteCustomer(Customer[] database, Customer newCust)
+	{
+		for (int i = 0; i < database.length; i++){
+			if (newCust.equals(database[i])){
+				database[i] = null;
+				//should there be a customer count we modify somewhere?
+			}//end if
+		}//end for
+		
+	}//End deleteCustomer() Method
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	private static void nameSort()
+	{
+		
+		
+	}//End nameSort() Method
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	private static void findIndex()
+	{
+		
+		
+	}//End findIndex() Method
 	
 }//End Customer Class
