@@ -43,7 +43,7 @@ public class Customer implements Comparable<Customer>
 	private String custNumber;
 	private double acctBalance;
 	private String phoneNumber;
-	public static final double TRANSCATION_FEE = 1.50; 
+	public static final double TRANSACTION_FEE = 1.50; 
 	
 	
 	/// Constructors ///
@@ -289,20 +289,18 @@ public class Customer implements Comparable<Customer>
 	 **/
 	public boolean deposit(double amount)
 	{
-		if(amount <= 0)
- +		{
- +			System.out.println("Error: Deposit amount is invalid."
- +					+ "Customer:" + lastName
- +					+ "Requested:" + amount
- +					+ "where "  + lastName + "equals the customer's name"
- +					+ amount + "equals the amount");
- +			return false;
- +		}
- +		else
- +		{
- +			acctBalance += amount;
- +			return true;
- +		}
+		if (amount <= 0){
+			System.out.println("Error: Deposit amount is invalid."
+					+ "Customer:" + lastName
+					+ "Requested:" + amount
+					+ "where "  + lastName + "equals the customer's name"
+					+ amount + "equals the amount");
+			return false;
+		}
+		else {
+			acctBalance += amount;
+			return true;
+		}
 		
 	}//End deposit(Long amount) Method
 	
@@ -321,31 +319,28 @@ public class Customer implements Comparable<Customer>
 	 **/
 	public boolean withdraw(double amount)
 	{
-		if(amount < 0)
- +		{
- +			System.out.println("Error: Withdraw amount is invalid."
- +					+ "Customer:" + lastName
- +					+ "Requested:" + amount
- +					+ "where " + lastName + "equals the customer's name"
- +					+ amount + "equals the amount");
- +			return false;
- +		}
- +		else if(amount > acctBalance)
- +		{
- +			System.out.println("Error: Insufficient funds"
- +					+ "Customer:" + lastName
- +					+ "Requested:" + amount
- +					+ "Available: " + acctBalance
- +					+ "where " + lastName + "equals the customer's name"
- +					+ amount + "equals the amount"
- +					+ acctBalance + "equals the balance in the account");
- +			return false;
- +		}
- +		else
- +		{
- +			acctBalance -= amount + TRANSCATION_FEE;
- +			return true;
- +		}
+		if (amount < 0){
+		System.out.println("Error: Withdraw amount is invalid."
+				+ "Customer:" + lastName
+				+ "Requested:" + amount
+				+ "where " + lastName + "equals the customer's name"
+				+ amount + "equals the amount");
+		return false;
+		}
+		else if (amount > acctBalance){
+			System.out.println("Error: Insufficient funds"
+					+ "Customer:" + lastName
+					+ "Requested:" + amount
+					+ "Available: " + acctBalance
+					+ "where " + lastName + "equals the customer's name"
+					+ amount + "equals the amount"
+					+ acctBalance + "equals the balance in the account");
+			return false;
+		}
+		else {
+			acctBalance -= amount + TRANSACTION_FEE;
+			return true;
+		}
 		
 	}//End withdraw(Long amount) Method
 	
@@ -423,6 +418,7 @@ public class Customer implements Comparable<Customer>
 			}//end if
 		}//end if
 		return isEqual;
+		
 	}//end equals(Object obj) Method
 	
 	
