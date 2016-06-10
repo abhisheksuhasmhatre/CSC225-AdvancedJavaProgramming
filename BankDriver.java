@@ -9,7 +9,7 @@
  * @author Anna (Ekeren?)
  * @author Rafael Ferrer
  * @author Abhishek Mhatre
- * @version 0, 06/06/16
+ * @version 0, 06/08/16
  * 
  * Description: ES&L Bank Account Manager Program - CSC 225 Prog1
  * 
@@ -23,7 +23,7 @@
  * @author Anna (Ekeren?)
  * @author Rafael Ferrer
  * @author Abhishek Mhatre
- * @version 0, 06/10/16
+ * @version 0, 06/08/16
  ********************************************************************************************************/
 
 
@@ -41,6 +41,7 @@ public class BankDriver
 	/**
 	 * Description
 	 * @param
+	 * @throws FileNotFoundException 
 	 *   
 	 * @precondition
 	 *   
@@ -63,10 +64,10 @@ public class BankDriver
 		//Startup Message
 		JOptionPane.showMessageDialog(null, 
 				//These spaces are properly aligned, do not change
-				"                                          ~~~ ES&L Bank ~~~\n" 
-				+ "                                Account Managament System\n\n"
-				+ "Please select an account database to manage after clicking 'OK'.", 
-				"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
+				"                                                   ~~~ ES&L Bank ~~~\n" 
+				+ "                                Customer Account Managament System\n\n"
+				+ "Please select a customer account database to manage after clicking 'OK'.", 
+				"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 		
 		//Have the user select the customer databaseFile to be used
 		databaseFile = FileLoader();
@@ -85,22 +86,22 @@ public class BankDriver
 				
 				//Main Menu Switch Board
 				switch(choice){
-					case 1: //1. Deposit sum to account
+					case 1: //1. Deposit money to an account.
 						
 						break;
-					case 2: //2. Withdraw sum from account
+					case 2: //2. Withdraw money from an account.
 						
 						break;
-					case 3: //3. Create account
+					case 3: //3. Create a new customer account.
 						
 						break;
-					case 4: //4. View all accounts
+					case 4: //4. View all customer accounts.
 						
 						break;
-					case 5: //5. Delete an account
+					case 5: //5. Delete a customer account.
 						
 						break;
-					case 6: //6. Quit and display accounts
+					case 6: //6. Quit and display all customer accounts.
 						
 						break;
 				}//end switch
@@ -110,10 +111,10 @@ public class BankDriver
 		//Exit Message
 		JOptionPane.showMessageDialog(null, 
 				//These spaces are properly aligned, do not change
-				"                     ~~~ ES&L Bank ~~~\n" 
-				+ "           Account Managament System\n\n"
-				+ "    Account Management System Closed.", 
-				"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
+				"                              ~~~ ES&L Bank ~~~\n" 
+				+ "           Customer Account Managament System\n\n"
+				+ "    Customer Account Management System Closed.", 
+				"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 		
 	}//End Main Method
 	
@@ -144,7 +145,7 @@ public class BankDriver
 			databaseFile = fileSelector.getSelectedFile();
 			JOptionPane.showMessageDialog(null, 
 					"You have selected the file located at: \n" + databaseFile.toString(), 
-					"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
+					"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 			return databaseFile;
 		}
 		//If no file is selected, give the user a second chance to select a file or close the program
@@ -152,7 +153,7 @@ public class BankDriver
 			JOptionPane.showMessageDialog(null, 
 					"Error! You must select a file to continue..."
 					+ "You may click 'Cancel' again to close the program.", 
-					"ES&L Bank: Error!", JOptionPane.ERROR_MESSAGE);
+					"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
 			//Launch the JFileChooser window to select the file to be used
 			status = fileSelector.showOpenDialog(null);
 			//Once a file has been selected, return that file
@@ -160,7 +161,7 @@ public class BankDriver
 				databaseFile = fileSelector.getSelectedFile();
 				JOptionPane.showMessageDialog(null, 
 						"You have selected the file located at: \n" + databaseFile.toString(), 
-						"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
+						"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 				return databaseFile;
 			}
 			//Close the program if no file is selected
@@ -229,17 +230,17 @@ public class BankDriver
 	 * A private GUI input method that displays the Main Menu for the ES&L Bank Account Manager program and returns a user input. 
 	 * The menu contains the following options:
 	 * <p>
-	 *    1. Deposit money to an account
+	 *    1. Deposit money to a customer account.
 	 * <p>
-	 *    2. Withdraw money from an account
+	 *    2. Withdraw money from a customer account.
 	 * <p>
-	 *    3. Create a new account
+	 *    3. Create a new customer account.
 	 * <p>
-	 *    4. View all accounts
+	 *    4. View all customer accounts.
 	 * <p>
-	 *    5. Delete an account
+	 *    5. Delete a customer account.
 	 * <p>
-	 *    6. Quit and display all accounts
+	 *    6. Quit and display all customer accounts.
 	 * <p>
 	 * The default option of 6 is selected if the user chooses "Cancel" or closes the window.
 	 * @precondition
@@ -260,15 +261,15 @@ public class BankDriver
 		
 		//Display the Main Menu
 		menuChoice = JOptionPane.showInputDialog(null, 
-				"Main Menu: \n\n"
-				+ "    1. Deposit money to an account\n"
-				+ "    2. Withdraw money from an account\n"
-				+ "    3. Create a new account\n"
-				+ "    4. View all accounts\n"
-				+ "    5. Delete an account\n"
-				+ "    6. Quit and display all accounts\n\n"
+				"Customer Bank Accounts Main Menu: \n\n"
+				+ "    1. Deposit money to a customer account.\n"
+				+ "    2. Withdraw money from a customer account.\n"
+				+ "    3. Create a new customer account.\n"
+				+ "    4. View all customer accounts.\n"
+				+ "    5. Delete a customer account.\n"
+				+ "    6. Quit and display all customer accounts.\n\n"
 				+ "Please enter your selection: \n", 
-				"ES&L Bank: Main Menu", JOptionPane.QUESTION_MESSAGE);
+				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
 		
 		//Obtain the user's Main Menu selection and catch illegal arguments
 		try {
@@ -276,7 +277,7 @@ public class BankDriver
 			if (input < 1 || input > 7){
 				JOptionPane.showMessageDialog(null, 
 						"Error! You must enter a choice between 1 and 6.", 
-						"ES&L Bank: Error!", JOptionPane.ERROR_MESSAGE);
+						"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
 				return mainMenuInput();
 			}
 		}//end try
@@ -289,7 +290,7 @@ public class BankDriver
 				JOptionPane.showMessageDialog(null, 
 					"Error! You must enter an integer. \n"
 					+ "Decimal numbers, letters, and characters are not allowed.", 
-					"ES&L Bank: Error!", JOptionPane.ERROR_MESSAGE);
+					"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
 				return mainMenuInput();
 			}
 		}//end catch
