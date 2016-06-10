@@ -8,7 +8,7 @@
  * Instructors: Professors Christine Forde and Harry Payne
  * @author Anna (Ekeren?)
  * @author Rafael Ferrer
- * @author Abhishek (Mhatre?)
+ * @author Abhishek Mhatre
  * @version 0, 06/06/16
  * 
  * Description: ES&L Bank Account Manager Program - CSC 225 Prog1
@@ -22,8 +22,8 @@
  * 
  * @author Anna (Ekeren?)
  * @author Rafael Ferrer
- * @author Abhishek (Mhatre?)
- * @version 0, 06/08/16
+ * @author Abhishek Mhatre
+ * @version 0, 06/10/16
  ********************************************************************************************************/
 
 
@@ -66,7 +66,7 @@ public class BankDriver
 		while (choice != 6){
 			
 			//Obtain user's Main Menu selection
-			choice = mainMenuInput(keyboard);
+			choice = mainMenuInput();
 			
 			//Main Menu Switch Board
 			switch(choice){
@@ -199,48 +199,77 @@ public class BankDriver
 	}//End createCustomerDatabase(File database) Method
 	
 	/**
-	 * Description
-	 * @param
-	 *   
+	 * A private GUI input method that displays the Main Menu for the ES&L Bank Account Manager program and returns a user input. 
+	 * The menu contains the following options:
+	 * <p>
+	 *    1. Deposit money to an account
+	 * <p>
+	 *    2. Withdraw money from an account
+	 * <p>
+	 *    3. Create a new account
+	 * <p>
+	 *    4. View all accounts
+	 * <p>
+	 *    5. Delete an account
+	 * <p>
+	 *    6. Quit and display all accounts
+	 * <p>
+	 * The default option of 6 is selected if the user chooses "Cancel" or closes the window.
 	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 *   none
+	 * @return
+	 *   Returns an integer value between 1-6. If the user chooses "Cancel" or closes the window, then the default value of 6 is returned.
+	 * @exception HeadlessException
+	 *   Uncaught exception that occurs if called in an environment that does not support a keyboard.
+	 * @exception NumberFormatException
+	 *   Caught exception that occurs if the user inputs anything other than an integer value.
 	 **/
-	private static int mainMenuInput(Scanner keyboard)
+	private static int mainMenuInput()
 	{
 		//Instance Variables
-		int input = -1; //The user's menu selection number
+		String menuChoice; //The Main Menu GUI
+		String exception; //The exception message thrown by NumberFormatException
+		int input = 6; //The user's menu selection number, default of 6 is exit
 		
 		//Display the Main Menu
-		System.out.println("\n\nMain Menu: ");
-		System.out.println("  1. Deposit sum to account");
-		System.out.println("  2. Withdraw sum from account");
-		System.out.println("  3. Create account");
-		System.out.println("  4. View all accounts");
-		System.out.println("  5. Delete an account");
-		System.out.println("  6. Quit and display accounts");
-		System.out.print("\nPlease enter your selection: ");
+		menuChoice = JOptionPane.showInputDialog(null, 
+				"Main Menu: \n\n"
+				+ "    1. Deposit money to an account\n"
+				+ "    2. Withdraw money from an account\n"
+				+ "    3. Create a new account\n"
+				+ "    4. View all accounts\n"
+				+ "    5. Delete an account\n"
+				+ "    6. Quit and display all accounts\n\n"
+				+ "Please enter your selection: \n", 
+				"ES&L Bank: Main Menu", JOptionPane.QUESTION_MESSAGE);
 		
 		//Obtain the user's Main Menu selection and catch illegal arguments
 		try {
-			input = keyboard.nextInt();
+			input = Integer.parseInt(menuChoice);
 			if (input < 1 || input > 7){
-				System.out.println("\nError! You must enter a choice between 1 and 6.");
+				JOptionPane.showMessageDialog(null, 
+						"Error! You must enter a choice between 1 and 6.", 
+						"ES&L Bank: Error!", JOptionPane.ERROR_MESSAGE);
+				return mainMenuInput();
 			}
 		}//end try
-		catch (Exception e){
-			System.out.println("\nError! You must enter an integer. Decimal numbers, letters, and characters are not allowed.");
-			keyboard.next();
-		}
+		catch (Exception NumberFormatException){
+			exception = NumberFormatException.toString();
+			if (exception.equals("java.lang.NumberFormatException: null")){
+				return input;
+			}
+			else { 
+				JOptionPane.showMessageDialog(null, 
+					"Error! You must enter an integer. \n"
+					+ "Decimal numbers, letters, and characters are not allowed.", 
+					"ES&L Bank: Error!", JOptionPane.ERROR_MESSAGE);
+				return mainMenuInput();
+			}
+		}//end catch
 		
 		return input;
 		
-	}//End mainMenuInput(Scanner keyboard) Method
+	}//End mainMenuInput() Method
 	
 	
 }//End BankDriver Class
