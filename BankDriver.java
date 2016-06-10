@@ -31,8 +31,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class BankDriver
 {
@@ -51,10 +51,10 @@ public class BankDriver
 	 * @note
 	 *   
 	 **/
-	public static void main(String[] args)
+	public static void main(String[] args) throws FileNotFoundException
 	{
 		//Instance Variables
-		File databaseFile; //The customer database file selected by the user.
+		File databaseFile; //The customer database file selected by the user. 
 		Customer[] customerDatabase;
 		Customer currentCustomer;
 		int choice = -1; //The user's menu selection number
@@ -63,48 +63,57 @@ public class BankDriver
 		//Startup Message
 		JOptionPane.showMessageDialog(null, 
 				//These spaces are properly aligned, do not change
-				"                                         ~~~ ES&L Bank ~~~\n" 
-				+ "                              Account Managament Program\n\n"
+				"                                          ~~~ ES&L Bank ~~~\n" 
+				+ "                                Account Managament System\n\n"
 				+ "Please select an account database to manage after clicking 'OK'.", 
 				"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
 		
 		//Have the user select the customer databaseFile to be used
 		databaseFile = FileLoader();
 		
-		//Create the customerDatabase from the databaseFile
-		//createCustomerDatabase(databaseFile);
-		
-		//Display the Main Menu for the user to manage the database
-		while (choice != 6){
+		//Run the program with the selected databaseFile, or close the program if no file was chosen
+		if (databaseFile != null){
 			
-			//Obtain user's Main Menu selection
-			choice = mainMenuInput();
+			//Create the customerDatabase from the databaseFile
+			//createCustomerDatabase(databaseFile);
 			
-			//Main Menu Switch Board
-			switch(choice){
-				case 1: //1. Deposit sum to account
-					
-					break;
-				case 2: //2. Withdraw sum from account
-					
-					break;
-				case 3: //3. Create account
-					
-					break;
-				case 4: //4. View all accounts
-					
-					break;
-				case 5: //5. Delete an account
-					
-					break;
-				case 6: //6. Quit and display accounts
-					
-					break;
-			}//end switch
-		}//end while
+			//Display the Main Menu for the user to manage the database
+			while (choice != 6){
+				
+				//Obtain user's Main Menu selection
+				choice = mainMenuInput();
+				
+				//Main Menu Switch Board
+				switch(choice){
+					case 1: //1. Deposit sum to account
+						
+						break;
+					case 2: //2. Withdraw sum from account
+						
+						break;
+					case 3: //3. Create account
+						
+						break;
+					case 4: //4. View all accounts
+						
+						break;
+					case 5: //5. Delete an account
+						
+						break;
+					case 6: //6. Quit and display accounts
+						
+						break;
+				}//end switch
+			}//end while
+		}//end if
 		
 		//Exit Message
-		
+		JOptionPane.showMessageDialog(null, 
+				//These spaces are properly aligned, do not change
+				"                     ~~~ ES&L Bank ~~~\n" 
+				+ "           Account Managament System\n\n"
+				+ "    Account Management System Closed.", 
+				"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
 		
 	}//End Main Method
 	
