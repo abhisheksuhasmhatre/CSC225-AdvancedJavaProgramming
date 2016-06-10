@@ -54,13 +54,25 @@ public class BankDriver
 	public static void main(String[] args)
 	{
 		//Instance Variables
+		File databaseFile; //The customer database file selected by the user.
 		Customer[] customerDatabase;
 		Customer currentCustomer;
 		int choice = -1; //The user's menu selection number
 		Scanner keyboard = new Scanner (System.in); //Scanner used to obtain user input from the keyboard
 		
 		//Startup Message
+		JOptionPane.showMessageDialog(null, 
+				//These spaces are properly aligned, do not change
+				"                                         ~~~ ES&L Bank ~~~\n" 
+				+ "                              Account Managament Program\n\n"
+				+ "Please select an account database to manage after clicking 'OK'.", 
+				"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
 		
+		//Have the user select the customer databaseFile to be used
+		databaseFile = FileLoader();
+		
+		//Create the customerDatabase from the databaseFile
+		//createCustomerDatabase(databaseFile);
 		
 		//Display the Main Menu for the user to manage the database
 		while (choice != 6){
@@ -100,18 +112,18 @@ public class BankDriver
 	/// Additional Methods Used by Main Method ///
 	
 	/**
-	 * This method allows the user to select the text file containing the names and keys to be used. 
+	 * This method allows the user to select the text file containing the Customer accounts to be managed. 
 	 * @precondition
 	 *   The file selected by the user must contain a single (one word) name and a single integer key on each line of the text file. 
 	 *   The text file selected must contain 241 or fewer elements. 
 	 *   The name and key for each element must be be separated by one of the following delimiters: " "   ","   ";"   ":"   "_"   "\t" 
 	 * @return
-	 *   Returns the user selected text file containing the names and keys to be used. 
+	 *   Returns the user selected text file containing the names and keys to be used.
 	 **/
 	private static File FileLoader()
 	{
 		//Instance Variables
-		File tableFile; //This is the text file where all the names and keys are stored
+		File databaseFile; //This is the text file where all the Customers are stored
 		JFileChooser fileSelector; //A file selector UI
 		
 		//Launch a JFileChooser window to select the file to be used
@@ -120,21 +132,27 @@ public class BankDriver
 		
 		//Once a file has been selected, return that file
 		if (status == JFileChooser.APPROVE_OPTION){
-			tableFile = fileSelector.getSelectedFile();
-			System.out.println("You have selected the file located at " + tableFile.toString());
-			return tableFile;
+			databaseFile = fileSelector.getSelectedFile();
+			JOptionPane.showMessageDialog(null, 
+					"You have selected the file located at: \n" + databaseFile.toString(), 
+					"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
+			return databaseFile;
 		}
 		//If no file is selected, give the user a second chance to select a file or close the program
 		else if (status == JFileChooser.CANCEL_OPTION){
-			System.out.println("You must select a file to continue...");
-			System.out.println("You may click 'Cancel' again to close the program.");
+			JOptionPane.showMessageDialog(null, 
+					"Error! You must select a file to continue..."
+					+ "You may click 'Cancel' again to close the program.", 
+					"ES&L Bank: Error!", JOptionPane.ERROR_MESSAGE);
 			//Launch the JFileChooser window to select the file to be used
 			status = fileSelector.showOpenDialog(null);
 			//Once a file has been selected, return that file
 			if (status == JFileChooser.APPROVE_OPTION){
-				tableFile = fileSelector.getSelectedFile();
-				System.out.println("You have selected the file located at " + tableFile.toString());
-				return tableFile;
+				databaseFile = fileSelector.getSelectedFile();
+				JOptionPane.showMessageDialog(null, 
+						"You have selected the file located at: \n" + databaseFile.toString(), 
+						"ES&L Bank", JOptionPane.PLAIN_MESSAGE);
+				return databaseFile;
 			}
 			//Close the program if no file is selected
 			else {
