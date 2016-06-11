@@ -96,13 +96,17 @@ public class BankDriver
 						
 						break;
 					case 4: //4. View all customer accounts.
-						
+						JOptionPane.showMessageDialog(null, 
+								"All customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase), 
+								"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 						break;
 					case 5: //5. Delete a customer account.
 						
 						break;
 					case 6: //6. Quit and display all customer accounts.
-						
+						JOptionPane.showMessageDialog(null, 
+								"All customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase), 
+								"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 						break;
 				}//end switch
 			}//end while
