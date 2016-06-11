@@ -480,11 +480,64 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	private static void nameSort()
+	private static void nameSort(Customer[] customerDatabase, int first, int manyItems)
 	{
+		//Instance Variables
+		int big;
+		Customer temp;
 		
+		//Run a selection sort on customerDatabase
+		for (int i = manyItems - 1; i > 0; i--){
+			//Calculate big as the index of the largest value in customerDatabase[first] through customerDatabase[manyItems]
+			big = first;
+			for (int j = first + 1; j <= first + i; j++){
+				if (customerDatabase[big].compareTo(customerDatabase[j]) < 0){
+					big = j;
+				}
+			}//end for
+			//Swap customerDatabase[first + i] with customerDatabase[big]
+			temp = customerDatabase[first + i];
+			customerDatabase[first + i] = customerDatabase[big];
+			customerDatabase[big] = temp;
+		}//end for
 		
-	}//End nameSort() Method
+	}//End nameSort(Customer[] customerDatabase, int first, int manyItems) Method
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	public static String databaseToString(Customer[] customerDatabase)
+	{
+		//Instance Variables
+		String databaseString = "Customer Name          Account ID          Phone Number          Account Balance          \n\n";
+		
+		//Sort the customer database alphabetically by lastName
+		nameSort(customerDatabase, 0, 30);
+		
+		//Add all customer accounts in the database to the databaseString
+		for (int i = 0; i < customerDatabase.length; i++){
+			if (customerDatabase[i] instanceof Customer){
+				databaseString = databaseString 
+						+ customerDatabase[i].getName() + "                    "
+						+ customerDatabase[i].getCustNumber() + "                    "
+						+ customerDatabase[i].getPhoneNumber() + "                    "
+						+ customerDatabase[i].getAcctBalance() + "                    \n";
+			}
+		}//end for
+		
+		return databaseString;
+		
+	}//End databaseToString(Customer[] customerDatabase) Method
 	
 	/**
 	 * Description
