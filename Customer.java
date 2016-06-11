@@ -490,15 +490,19 @@ public class Customer implements Comparable<Customer>
 		for (int i = manyItems - 1; i > 0; i--){
 			//Calculate big as the index of the largest value in customerDatabase[first] through customerDatabase[manyItems]
 			big = first;
-			for (int j = first + 1; j <= first + i; j++){
-				if (customerDatabase[big].compareTo(customerDatabase[j]) < 0){
-					big = j;
-				}
-			}//end for
-			//Swap customerDatabase[first + i] with customerDatabase[big]
-			temp = customerDatabase[first + i];
-			customerDatabase[first + i] = customerDatabase[big];
-			customerDatabase[big] = temp;
+			if (customerDatabase[big] instanceof Customer){
+				for (int j = first + 1; j <= first + i; j++){
+						if (customerDatabase[j] instanceof Customer){
+							if (customerDatabase[big].compareTo(customerDatabase[j]) < 0){
+								big = j;
+							}
+						}//end if
+				}//end for
+				//Swap customerDatabase[first + i] with customerDatabase[big]
+				temp = customerDatabase[first + i];
+				customerDatabase[first + i] = customerDatabase[big];
+				customerDatabase[big] = temp;
+			}//end if
 		}//end for
 		
 	}//End nameSort(Customer[] customerDatabase, int first, int manyItems) Method
