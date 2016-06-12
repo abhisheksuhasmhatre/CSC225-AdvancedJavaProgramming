@@ -188,7 +188,7 @@ public class Customer implements Comparable<Customer>
 	{
 		DecimalFormat cashOutput = new DecimalFormat("0.00"); //decimal output format for outputting account balances
 		
-		return "Last Name: " + lastName + "; Customer Number: " + custNumber + "; Account Balance: " + cashOutput.format(acctBalance/100.0) + "; Phone Number: " + phoneNumber;
+		return "Last Name: " + lastName + ";   Customer Number: " + custNumber + ";   Account Balance: $" + cashOutput.format(acctBalance) + ";   Phone Number: " + phoneNumber;
 		
 	}//End toString() Method
 	
@@ -524,6 +524,7 @@ public class Customer implements Comparable<Customer>
 	{
 		//Instance Variables
 		String databaseString = "Customer Name          Account ID          Phone Number          Account Balance          \n\n";
+		DecimalFormat cashOutput = new DecimalFormat("0.00"); //decimal output format for outputting account balances
 		
 		//Sort the customer database alphabetically by lastName
 		nameSort(customerDatabase, 0, 30);
@@ -535,7 +536,7 @@ public class Customer implements Comparable<Customer>
 						+ customerDatabase[i].getName() + "                    "
 						+ customerDatabase[i].getCustNumber() + "                    "
 						+ customerDatabase[i].getPhoneNumber() + "                    "
-						+ customerDatabase[i].getAcctBalance() + "                    \n";
+						+ "$" + cashOutput.format(customerDatabase[i].getAcctBalance()) + "                    \n";
 			}
 		}//end for
 		
