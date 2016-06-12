@@ -320,29 +320,29 @@ public class Customer implements Comparable<Customer>
 	public boolean withdraw(double amount)
 	{
 		if (amount < 0){
-		System.out.println("Error: Withdraw amount is invalid."
-				+ "Customer:" + lastName
-				+ "Requested:" + amount
-				+ "where " + lastName + "equals the customer's name"
-				+ amount + "equals the amount");
-		return false;
+			JOptionPane.showMessageDialog(null,("Error: Withdraw amount is invalid."
+					+ "Customer:" + lastName
+					+ "Requested:" + amount
+					+ "where " + lastName + "equals the customer's name"
+					+ amount + "equals the amount"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
+			return false;
 		}
 		else if (amount > acctBalance){
-			System.out.println("Error: Insufficient funds"
+			JOptionPane.showMessageDialog(null,("Error: Insufficient funds"
 					+ "Customer:" + lastName
 					+ "Requested:" + amount
 					+ "Available: " + acctBalance
 					+ "where " + lastName + "equals the customer's name"
 					+ amount + "equals the amount"
-					+ acctBalance + "equals the balance in the account");
+					+ acctBalance + "equals the balance in the account"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		else {
-			acctBalance -= amount + TRANSACTION_FEE;
+			JOptionPane.showMessageDialog(null,  "Balance after withdrawal " + (acctBalance -= amount + TRANSACTION_FEE), "ES&L Banking System", JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		}
 		
-	}//End withdraw(Long amount) Method
+	}//End withdraw(double amount) Method
 	
 	/**
 	 * Description
