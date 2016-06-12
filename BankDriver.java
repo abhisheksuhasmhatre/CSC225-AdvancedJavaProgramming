@@ -105,7 +105,7 @@ public class BankDriver
 						break;
 					case 6: //6. Quit and display all customer accounts.
 						JOptionPane.showMessageDialog(null, 
-								"All customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase), 
+								"State of all customer bank accounts in the database after saving: \n\n" + Customer.databaseToString(customerDatabase), 
 								"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 						break;
 				}//end switch
@@ -262,6 +262,7 @@ public class BankDriver
 		String menuChoice; //The Main Menu GUI
 		String exception; //The exception message thrown by NumberFormatException
 		int input = 6; //The user's menu selection number, default of 6 is exit
+		int dialogButton;
 		
 		//Display the Main Menu
 		menuChoice = JOptionPane.showInputDialog(null, 
@@ -271,7 +272,7 @@ public class BankDriver
 				+ "    3. Create a new customer account.\n"
 				+ "    4. View all customer accounts.\n"
 				+ "    5. Delete a customer account.\n"
-				+ "    6. Quit and display all customer accounts.\n\n"
+				+ "    6. Quit and save changes.\n\n"
 				+ "Please enter your selection: \n", 
 				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
 		
@@ -288,8 +289,18 @@ public class BankDriver
 		catch (Exception NumberFormatException){
 			exception = NumberFormatException.toString();
 			if (exception.equals("java.lang.NumberFormatException: null")){
-				return input;
-			}
+				dialogButton = JOptionPane.showConfirmDialog(null, 
+						"WARNING: If you close the system this way, none of the changes you made to the Customer Account Management System will be saved. \n"
+						+ "Please return to the Main Menu and select option 6 to quit and save all changes made to the Customer Account Management System. \n\n"
+						+ "Are you sure you want to quit without saving?",
+						"ES&L Bank - Customer Account Management System", JOptionPane.YES_NO_OPTION);
+				if (dialogButton == JOptionPane.YES_OPTION){
+					return input;
+				}
+				else {
+					return mainMenuInput();
+				}
+			}//end if
 			else { 
 				JOptionPane.showMessageDialog(null, 
 					"Error! You must enter an integer. \n"
