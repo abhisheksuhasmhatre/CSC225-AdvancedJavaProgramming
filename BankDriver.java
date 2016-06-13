@@ -57,9 +57,9 @@ public class BankDriver
 		//Instance Variables
 		File databaseFile; //The customer database file selected by the user. 
 		Customer[] customerDatabase;
-		Customer currentCustomer;
+		Customer currentCustomer;// Customer cursor
+		Object [] customerInfo; //customerInfo[0] contains a Customer's index in customerDatabase, customerInfo[1] contains the Customer
 		int choice = -1; //The user's menu selection number
-		Scanner keyboard = new Scanner (System.in); //Scanner used to obtain user input from the keyboard
 		
 		//Startup Message
 		JOptionPane.showMessageDialog(null, 
@@ -101,7 +101,14 @@ public class BankDriver
 								"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 						break;
 					case 5: //5. Delete a customer account.
-						
+						customerInfo = customerSearch(customerDatabase);
+						if (customerInfo != null){
+							if (Customer.deleteCustomer(customerDatabase, ((int) customerInfo[0])) == true){
+								JOptionPane.showMessageDialog(null, 
+										"The following customer bank account has been deleted from the system: \n\n" + ((Customer) customerInfo[1]).toString(), 
+										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+							}
+						}//end if
 						break;
 					case 6: //6. Quit and display all customer accounts.
 						JOptionPane.showMessageDialog(null, 
@@ -229,6 +236,61 @@ public class BankDriver
 		return customerDatabase;
 		
 	}//End createCustomerDatabase(File database) Method
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	private static Object[] customerSearch(Customer[] customerDatabase)
+	{
+		//Instance Variables
+		Object[] custInfo = new Object[2];
+		Customer findCust;
+		String nameLast;
+		String custNum;
+		int index;
+		
+		//Obtain the last name for account being searched
+		nameLast = JOptionPane.showInputDialog(null, 
+				"Search for a customer bank account: Customer Name \n\n"
+				+ "Please enter the last name on the account you are searching for: \n", 
+				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
+		
+		//Obtain the customer number for the account being searched
+		custNum = JOptionPane.showInputDialog(null, 
+				"Search for a customer bank account: Customer ID \n\n"
+				+ "Please enter the customer ID on the account you are searching for: \n", 
+				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
+
+		//Find the customer in the customerDatabase and return the customer and their index if found
+		findCust = new Customer(nameLast, custNum, 0, "");
+		index = Customer.findIndex(customerDatabase, findCust);
+		if (index == -1){
+			JOptionPane.showMessageDialog(null, 
+					"This customer could not be found in the database. \n\n" 
+					+ "Customer Name: " + findCust.getName() 
+					+ "\nCustomer ID:" + findCust.getCustNumber(), 
+					"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+			return null;
+		}
+		else {
+			findCust = customerDatabase[index];
+		}
+		custInfo[0] = index;
+		custInfo[1] = findCust;
+		
+		return custInfo;
+		
+	}//End customerSearch(Customer[] customerDatabase) Method
 	
 	/**
 	 * A private GUI input method that displays the Main Menu for the ES&L Bank Account Manager program and returns a user input. 
