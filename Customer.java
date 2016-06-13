@@ -468,16 +468,18 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	private static void deleteCustomer(Customer[] database, Customer newCust)
+	public static boolean deleteCustomer(Customer[] customerDatabase, int index)
 	{
-		for (int i = 0; i < database.length; i++){
-			if (newCust.equals(database[i])){
-				database[i] = null;
-				//should there be a customer count we modify somewhere?
-			}//end if
-		}//end for
+		try {
+			customerDatabase[index] = null;
+		}
+		catch (Exception OutOfBounds){
+			return false;
+		}
 		
-	}//End deleteCustomer() Method
+		return true;
+		
+	}//End deleteCustomer(Customer[] customerDatabase, int index) Method
 	
 	/**
 	 * Description
@@ -569,16 +571,21 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	private String findIndex(String[] array , String name)
+	public static int findIndex(Customer[] customerDatabase, Customer findCust)
 	{
-		for (int i = 0; i <= array.length; i++){
-			if (array[i].equals(lastName)){ 
-				return lastName;
+		//Instance Variables
+		int index;
+		
+		//Search for the index in customerDatabase that contains this customer and return that index
+		for (index = 0; index < customerDatabase.length; index++){
+			if (customerDatabase[index] instanceof Customer && customerDatabase[index].equals(findCust)){ 
+				return index;
 			}
 		}//end for
 		
-		return lastName;
+		//If the customer is not found in customerDatabase, then return -1
+		return -1;
 		
-	}//End findIndex(String[] array , String name) Method
+	}//End findIndex(Customer[] customerDatabase, Customer findCust) Method
 	
 }//End Customer Class
