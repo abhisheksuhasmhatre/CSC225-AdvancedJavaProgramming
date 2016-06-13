@@ -75,8 +75,12 @@ public class BankDriver
 		//Run the program with the selected databaseFile, or close the program if no file was chosen
 		if (databaseFile != null){
 			
-			//Create the customerDatabase from the databaseFile
-			//createCustomerDatabase(databaseFile);
+			//Create the customerDatabase from the databaseFile and display it
+			customerDatabase = createCustomerDatabase(databaseFile);
+			JOptionPane.showMessageDialog(null, 
+					"State of all customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase) + "\n\n"
+					+ "Click 'OK' to continue to the main menu.", 
+					"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 			
 			//Display the Main Menu for the user to manage the database
 			while (choice != 6){
@@ -92,8 +96,20 @@ public class BankDriver
 					case 2: //2. Withdraw money from an account.
 						
 						break;
-					case 3: //3. Create a new customer account.
-						
+					case 3: //3. Create a new customer account. //Do not add to GH, this method is for Anna
+						currentCustomer = createCustomer(customerDatabase);
+						if (Customer.addNewCustomer(currentCustomer, customerDatabase) == true){
+							JOptionPane.showMessageDialog(null, 
+									"The following customer bank account has been created successfully: \n\n" + currentCustomer.toString(), 
+									"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+						}
+						else {
+							JOptionPane.showMessageDialog(null, 
+									"The customer database is full! \n"
+									+ "The following customer bank account was NOT created: \n\n" + currentCustomer.toString() + "\n\n"
+									+ "Please delete customer bank accounts that are no longer in use to make space available for new accounts.",
+									"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+						}
 						break;
 					case 4: //4. View all customer accounts.
 						JOptionPane.showMessageDialog(null, 
@@ -186,7 +202,7 @@ public class BankDriver
 		
 	}//End FileLoader() Method
 	
-	/**
+	/** Do not add to GH, this method is for Anna
 	 * This method reads the golfer "database" text file selected by the FileLoader() method and generates a golfer TreeBag from it to be used in this program.
 	 * @param database
 	 *   the golfer "database" text file selected by the FileLoader() method
@@ -208,9 +224,15 @@ public class BankDriver
 	private static Customer[] createCustomerDatabase(File database) throws FileNotFoundException
 	{
 		//Instance Variables
-		Customer[] customerDatabase = new Customer[30];
+		final int DATABASE_SIZE = 30;
+		Customer[] customerDatabase = new Customer[DATABASE_SIZE];
 		String readCustomer; //A cursor for each line of text in the database text file
-		Customer currentCustomer; //A cursor used to add customers and their account information to the customerDatabase
+		Customer newCustomer; //A cursor used to add customers and their account information to the customerDatabase
+		String nameLast;
+		String custNum;
+		String phoneNum;
+		double acctBal;
+		int line = 1;
 		
 		//Scanner Instantiation
 		Scanner fileScanner = new Scanner(database); //Used to read the database text file
@@ -221,14 +243,34 @@ public class BankDriver
 		String delimeters = " ,;:_\t"; //For each golfer (new line), each piece of information may be separated with any of these delimiters
 		
 		//Read the database text file one line at a time, construct each golfer, add each golfer's stats, then add the golfer to golferDatabase
-		while(fileScanner.hasNextLine()){
-			readCustomer = fileScanner.nextLine();
-			tokenizer = new StringTokenizer(readCustomer, delimeters);
-			//currentCustomer = new Customer(tokenizer.nextToken());
-			//currentCustomer.setNumberOfRounds(Integer.parseInt(tokenizer.nextToken()));
-			//currentCustomer.setHandicap(Integer.parseInt(tokenizer.nextToken()));
-			//currentCustomer.setAverageScore(Double.parseDouble(tokenizer.nextToken()));
-			//customerDatabase.add(currentCustomer);
+		while (fileScanner.hasNextLine()){
+			try {
+				readCustomer = fileScanner.nextLine();
+				tokenizer = new StringTokenizer(readCustomer, delimeters);
+				if (tokenizer.hasMoreTokens()){
+					nameLast = tokenizer.nextToken();
+					custNum = tokenizer.nextToken();
+					acctBal = Double.parseDouble(tokenizer.nextToken());
+					phoneNum = tokenizer.nextToken();
+					newCustomer = new Customer(nameLast, custNum, acctBal, phoneNum);
+					if (Customer.addNewCustomer(newCustomer, customerDatabase) == false){
+						fileScanner.close();
+						JOptionPane.showMessageDialog(null, 
+								"WARNING: The customer database size limit has been reached! \n"
+								+ "Only the first 30 accounts listed in this customer account database will be imported. \n"
+								+ "If you save this database, all customer accounts that were not imported will be permanently deleted from the database.",
+								"ES&L Bank - Customer Account Management System", JOptionPane.WARNING_MESSAGE);
+						return customerDatabase;
+					}
+				}//end if
+			}//end try
+			catch (Exception multipleExceptions){
+				JOptionPane.showMessageDialog(null, 
+						"Error! Error in database file input! \n\n"
+						+ "Line " + line + " of the database has been ignored and the customer on this line will not be added.", 
+						"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+			}
+			line++;
 		}//end while
 		
 		fileScanner.close();
@@ -236,6 +278,95 @@ public class BankDriver
 		return customerDatabase;
 		
 	}//End createCustomerDatabase(File database) Method
+	
+	/**
+	 * Do not add to GH, this method is for Anna
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	private static Customer createCustomer(Customer[] customerDatabase)
+	{
+		//Instance Variables
+		Customer newCustomer;
+		String nameLast;
+		String custNum;
+		String phoneNum;
+		double acctBal = 0;
+		boolean uniqueID;
+		boolean legalDouble;
+		
+		//Obtain the last name that will be used for this account
+		nameLast = JOptionPane.showInputDialog(null, 
+				"Add a new customer bank account: Customer Name \n\n"
+				+ "Please enter the last name that will be used for this account: \n", 
+				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
+		
+		//Obtain the customer number that will be used for this account
+		do {
+			uniqueID = true;
+			custNum = JOptionPane.showInputDialog(null, 
+					"Add a new customer bank account: Customer ID \n\n"
+					+ "Please enter the customer ID that will be used for this account: \n", 
+					"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
+			//Verify that the custNum is unique before continuing
+			for (int i = 0; i < customerDatabase.length; i++){
+				if (customerDatabase[i] instanceof Customer){
+					if (custNum.equals(customerDatabase[i].getCustNumber())){
+						uniqueID = false;
+						JOptionPane.showMessageDialog(null, 
+								"Error! This customer ID is already in use. \n"
+								+ "Please enter a new customer ID after clicking 'OK'.", 
+								"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+					}
+				}//end if
+			}//end for
+		} while (uniqueID == false); //end do-while
+		
+		//Obtain the phone number that will be used for this account
+		phoneNum = JOptionPane.showInputDialog(null, 
+				"Add a new customer bank account: Customer Phone Number \n\n"
+				+ "Please enter the phone number that will be used for this account: \n", 
+				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
+		
+		//Obtain the account balance of this account
+		do {
+			legalDouble = true;
+			try {
+				acctBal = Double.parseDouble(JOptionPane.showInputDialog(null, 
+						"Add a new customer bank account: Account Balance \n\n"
+						+ "Please enter the current account balance for this account: \n", 
+						"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE));
+				if (acctBal < 0){
+					legalDouble = false;
+					JOptionPane.showMessageDialog(null, 
+							"Error! You must enter a decimal amount greater than 0.00. \n"
+							+ "Negative amounts, letters, and characters are not allowed.", 
+							"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			catch (Exception NumberFormatException){
+				legalDouble = false;
+				JOptionPane.showMessageDialog(null, 
+						"Error! You must enter a decimal amount greater than 0.00. \n"
+						+ "Negative amounts, letters, and characters are not allowed.", 
+						"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+			}
+		} while (legalDouble == false); //end do-while
+		
+		//Create the new customer account
+		newCustomer = new Customer(nameLast, custNum, acctBal, phoneNum);
+		
+		return newCustomer;
+		
+	}//End createCustomer() Method
 	
 	/**
 	 * Description
