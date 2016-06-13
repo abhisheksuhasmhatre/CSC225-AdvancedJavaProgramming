@@ -23,11 +23,12 @@
  * @author Anna (Ekeren?)
  * @author Rafael Ferrer
  * @author Abhishek Mhatre
- * @version 0, 06/08/16
+ * @version 0, 06/13/16
  ********************************************************************************************************/
 
 
 import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
 
 public class Customer implements Comparable<Customer>
 {
@@ -290,19 +291,19 @@ public class Customer implements Comparable<Customer>
 	public boolean deposit(double amount)
 	{
 		if (amount <= 0){
-			System.out.println("Error: Deposit amount is invalid."
+			JOptionPane.showMessageDialog(null,("Error: Deposit amount is invalid."
 					+ "Customer:" + lastName
 					+ "Requested:" + amount
 					+ "where "  + lastName + "equals the customer's name"
-					+ amount + "equals the amount");
+					+ amount + "equals the amount"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		else {
-			acctBalance += amount;
+			JOptionPane.showMessageDialog(null, "Balance after deposit " + (acctBalance += amount), "ES&L Banking System", JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		}
 		
-	}//End deposit(Long amount) Method
+	}//End deposit(double amount) Method
 	
 	/**
 	 * Description
@@ -437,11 +438,22 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	private static void addNewCustomer()
+	public static boolean addNewCustomer(Customer newCustomer, Customer[] customerDatabase)
 	{
-		/// Verify that the customer number is unique!!!! ///
+		//Instance Variables
+		boolean successful = false;
 		
-	}//End addNewCustomer()v Method
+		for (int i = 0; i < customerDatabase.length; i++){
+			if (customerDatabase[i] == null){
+				customerDatabase[i] = newCustomer;
+				successful = true;
+				return successful;
+			}
+		}//end for
+		
+		return successful;
+		
+	}//End addNewCustomer(Customer[] customerDatabase) Method
 	
 	/**
 	 * Description
@@ -557,10 +569,16 @@ public class Customer implements Comparable<Customer>
 	 * @note
 	 *   
 	 **/
-	private static void findIndex()
+	private String findIndex(String[] array , String name)
 	{
+		for (int i = 0; i <= array.length; i++){
+			if (array[i].equals(lastName)){ 
+				return lastName;
+			}
+		}//end for
 		
+		return lastName;
 		
-	}//End findIndex() Method
+	}//End findIndex(String[] array , String name) Method
 	
 }//End Customer Class
