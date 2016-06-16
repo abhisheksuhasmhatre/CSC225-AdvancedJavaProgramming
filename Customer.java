@@ -290,18 +290,17 @@ public class Customer implements Comparable<Customer>
 	 **/
 	public boolean deposit(double amount)
 	{
-		if (amount <= 0){
-			JOptionPane.showMessageDialog(null,("Error: Deposit amount is invalid."
-					+ "Customer:" + lastName
-					+ "Requested:" + amount
-					+ "where "  + lastName + "equals the customer's name"
-					+ amount + "equals the amount"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "Balance after deposit " + (acctBalance += amount), "ES&L Banking System", JOptionPane.INFORMATION_MESSAGE);
-			return true;
-		}
+		//Instance Variables
+		boolean successful = false;
+		final double RATE = .045;
+		
+		if (amount > 0){
+			this.addInterest(RATE);
+			acctBalance += amount;
+			successful = true;
+		}//end if
+		
+		return successful;
 		
 	}//End deposit(double amount) Method
 	
@@ -320,29 +319,27 @@ public class Customer implements Comparable<Customer>
 	 **/
 	public boolean withdraw(double amount)
 	{
-		if (amount < 0){
-			JOptionPane.showMessageDialog(null,("Error: Withdraw amount is invalid."
-					+ "Customer:" + lastName
-					+ "Requested:" + amount
-					+ "where " + lastName + "equals the customer's name"
-					+ amount + "equals the amount"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		else if (amount > acctBalance){
-			JOptionPane.showMessageDialog(null,("Error: Insufficient funds"
-					+ "Customer:" + lastName
-					+ "Requested:" + amount
-					+ "Available: " + acctBalance
-					+ "where " + lastName + "equals the customer's name"
-					+ amount + "equals the amount"
-					+ acctBalance + "equals the balance in the account"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-		else {
-			JOptionPane.showMessageDialog(null,  "Balance after withdrawal " + (acctBalance -= amount + TRANSACTION_FEE), "ES&L Banking System", JOptionPane.INFORMATION_MESSAGE);
-			return true;
-		}
+		//Instance Variables
+		boolean successful = false;
 		
+		if (amount > 0){
+			if (amount > acctBalance){
+				JOptionPane.showMessageDialog(null,("Error: Insufficient funds"
+						+ "Customer:" + lastName
+						+ "Requested:" + amount
+						+ "Available: " + acctBalance
+						+ "where " + lastName + "equals the customer's name"
+						+ amount + "equals the amount"
+						+ acctBalance + "equals the balance in the account"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
+			}
+			else {
+				acctBalance -= amount + TRANSACTION_FEE;
+				successful = true;
+			}
+		}//end if
+
+		return successful;
+
 	}//End withdraw(double amount) Method
 	
 	/**
