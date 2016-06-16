@@ -29,6 +29,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import javax.swing.JFileChooser;
@@ -59,6 +60,7 @@ public class BankDriver
 		Customer[] customerDatabase;
 		Customer currentCustomer;// Customer cursor
 		Object [] customerInfo; //customerInfo[0] contains a Customer's index in customerDatabase, customerInfo[1] contains the Customer
+		double amount = 0;//The amount of money being deposited or withdrawn
 		int choice = -1; //The user's menu selection number
 		
 		//Startup Message
@@ -91,12 +93,30 @@ public class BankDriver
 				//Main Menu Switch Board
 				switch(choice){
 					case 1: //1. Deposit money to an account.
-						
+						customerInfo = customerSearch(customerDatabase);
+						amount = getDoubleAmount();
+						if (customerInfo != null){
+							if (((Customer) customerInfo[1]).deposit(amount) == true){
+								JOptionPane.showMessageDialog(null, 
+										"The deposit has been successful. \n\n" 
+										+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
+										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+							}
+						}//end if
 						break;
 					case 2: //2. Withdraw money from an account.
-						
+						customerInfo = customerSearch(customerDatabase);
+						amount = getDoubleAmount();
+						if (customerInfo != null){
+							if (((Customer) customerInfo[1]).withdraw(amount) == true){
+								JOptionPane.showMessageDialog(null, 
+										"The withdrawl has been successful. \n\n" 
+										+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
+										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+							}
+						}//end if
 						break;
-					case 3: //3. Create a new customer account. //Do not add to GH, this method is for Anna
+					case 3: //3. Create a new customer account.
 						currentCustomer = createCustomer(customerDatabase);
 						if (Customer.addNewCustomer(currentCustomer, customerDatabase) == true){
 							JOptionPane.showMessageDialog(null, 
@@ -127,9 +147,13 @@ public class BankDriver
 						}//end if
 						break;
 					case 6: //6. Quit and display all customer accounts.
+						FileSaver(databaseFile, customerDatabase);
 						JOptionPane.showMessageDialog(null, 
 								"State of all customer bank accounts in the database after saving: \n\n" + Customer.databaseToString(customerDatabase), 
 								"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+						break;
+					case -1: //Not a user option. Quit without saving.
+						choice = 6;
 						break;
 				}//end switch
 			}//end while
@@ -202,7 +226,37 @@ public class BankDriver
 		
 	}//End FileLoader() Method
 	
-	/** Do not add to GH, this method is for Anna
+	/**
+	 * This method overwrites the golfer "database" text file selected in the FileLoader() method with any changes made while running this program, then saves the file.
+	 * @param database
+	 *   The golfer "database" text file selected in the FileLoader() method.
+	 * @param golferDatabase
+	 *   The golfer TreeBag created by the createGolferDatabase() method.
+	 * @postcondition / return
+	 *   The golfer "database" text file selected in the FileLoader() method has been overwritten with any changes made while running this program and saved.
+	 * @throws FileNotFoundException
+	 * @Note
+	 *   This method uses the writeToDatabase() method to actually write over the previous golfer "database" text file. Then this method saves that file.
+	 **/
+	private static void FileSaver(File databaseFile, Customer[] customerDatabase) throws FileNotFoundException
+	{	
+		//Instance Variables
+		PrintWriter fileWriter; //Writes a line of text to the text file database
+		Customer currentCustomer;// Customer cursor
+		
+		//Write over the database text file with all changes made to golferDatabase and then save the file
+		fileWriter = new PrintWriter(databaseFile);
+		for (int i = 0; i < customerDatabase.length; i++){
+			if (customerDatabase[i] instanceof Customer){
+				currentCustomer = customerDatabase[i];
+				fileWriter.println(currentCustomer.getName() + " " + currentCustomer.getCustNumber() + " " + currentCustomer.getAcctBalance() + " " + currentCustomer.getPhoneNumber());
+			}
+		}//end for
+		fileWriter.close();
+
+	}//End FileSaver(File databaseFile, Customer[] customerDatabase) Method
+	
+	/**
 	 * This method reads the golfer "database" text file selected by the FileLoader() method and generates a golfer TreeBag from it to be used in this program.
 	 * @param database
 	 *   the golfer "database" text file selected by the FileLoader() method
@@ -280,7 +334,7 @@ public class BankDriver
 	}//End createCustomerDatabase(File database) Method
 	
 	/**
-	 * Do not add to GH, this method is for Anna
+	 * Description
 	 * @param
 	 *   
 	 * @precondition
@@ -488,7 +542,7 @@ public class BankDriver
 						+ "Are you sure you want to quit without saving?",
 						"ES&L Bank - Customer Account Management System", JOptionPane.YES_NO_OPTION);
 				if (dialogButton == JOptionPane.YES_OPTION){
-					return input;
+					return -1; //This will halt the Main Menu options and push the exit message, closing the program
 				}
 				else {
 					return mainMenuInput();
@@ -506,6 +560,53 @@ public class BankDriver
 		return input;
 		
 	}//End mainMenuInput() Method
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	private static double getDoubleAmount()
+	{
+		//Instance Variables
+		double amount = 0;
+		boolean legalDouble;
+
+		//
+		do {
+			legalDouble = true;
+			try {
+				amount = Double.parseDouble(JOptionPane.showInputDialog(null, 
+						"Please enter the amount of money: \n", 
+						"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE));
+				if (amount <= 0){
+					legalDouble = false;
+					JOptionPane.showMessageDialog(null, 
+							"Error! You must enter a decimal amount greater than 0.00. \n"
+									+ "Negative amounts, letters, and characters are not allowed.", 
+									"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+				}
+			}//end try
+			catch (Exception NumberFormatException){
+				legalDouble = false;
+				JOptionPane.showMessageDialog(null, 
+						"Error! You must enter a decimal amount greater than 0.00. \n"
+								+ "Negative amounts, letters, and characters are not allowed.", 
+								"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+			}
+		} while (legalDouble == false); //end do-while
+
+		return amount;
+
+	}//End getDoubleAmount()Method
 	
 	
 }//End BankDriver Class
