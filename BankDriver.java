@@ -61,6 +61,7 @@ public class BankDriver
 		Customer currentCustomer;// Customer cursor
 		Object [] customerInfo; //customerInfo[0] contains a Customer's index in customerDatabase, customerInfo[1] contains the Customer
 		double amount = 0;//The amount of money being deposited or withdrawn
+		int count = 0; //The number of customers in customerDatabase
 		int choice = -1; //The user's menu selection number
 		
 		//Startup Message
@@ -79,6 +80,11 @@ public class BankDriver
 			
 			//Create the customerDatabase from the databaseFile and display it
 			customerDatabase = createCustomerDatabase(databaseFile);
+			for (int i = 0; i < customerDatabase.length; i++){
+				if (customerDatabase[i] instanceof Customer){
+					count++;
+				}
+			}
 			JOptionPane.showMessageDialog(null, 
 					"State of all customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase) + "\n\n"
 					+ "Click 'OK' to continue to the main menu.", 
@@ -107,18 +113,28 @@ public class BankDriver
 					case 2: //2. Withdraw money from an account.
 						customerInfo = customerSearch(customerDatabase);
 						amount = getDoubleAmount();
+						currentCustomer = (Customer) customerInfo[1];
 						if (customerInfo != null){
-							if (((Customer) customerInfo[1]).withdraw(amount) == true){
+							if (currentCustomer.withdraw(amount) == true){
 								JOptionPane.showMessageDialog(null, 
 										"The withdrawl has been successful. \n\n" 
 										+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
 										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 							}
+							else {
+								JOptionPane.showMessageDialog(null, 
+										"Error: Insufficient funds \n"
+										+ "\nCustomer: " + currentCustomer.getName()
+										+ "\nRequested: " + amount
+										+ "\nAvailable: " + currentCustomer.getAcctBalance(),
+										"ES&L Bank - Customer Account Management System", JOptionPane.ERROR_MESSAGE);
+							}
 						}//end if
 						break;
 					case 3: //3. Create a new customer account.
 						currentCustomer = createCustomer(customerDatabase);
-						if (Customer.addNewCustomer(currentCustomer, customerDatabase) == true){
+						if (Customer.addNewCustomer(customerDatabase, currentCustomer) == true){
+							count++;
 							JOptionPane.showMessageDialog(null, 
 									"The following customer bank account has been created successfully: \n\n" + currentCustomer.toString(), 
 									"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
@@ -140,6 +156,7 @@ public class BankDriver
 						customerInfo = customerSearch(customerDatabase);
 						if (customerInfo != null){
 							if (Customer.deleteCustomer(customerDatabase, ((int) customerInfo[0])) == true){
+								count--;
 								JOptionPane.showMessageDialog(null, 
 										"The following customer bank account has been deleted from the system: \n\n" + ((Customer) customerInfo[1]).toString(), 
 										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
@@ -307,7 +324,7 @@ public class BankDriver
 					acctBal = Double.parseDouble(tokenizer.nextToken());
 					phoneNum = tokenizer.nextToken();
 					newCustomer = new Customer(nameLast, custNum, acctBal, phoneNum);
-					if (Customer.addNewCustomer(newCustomer, customerDatabase) == false){
+					if (Customer.addNewCustomer(customerDatabase, newCustomer) == false){
 						fileScanner.close();
 						JOptionPane.showMessageDialog(null, 
 								"WARNING: The customer database size limit has been reached! \n"
