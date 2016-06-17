@@ -6,500 +6,521 @@
  * Course Title: Advanced Java Programming
  * Course Number: CSC 225-805
  * Instructors: Professors Christine Forde and Harry Payne
- * @author Anna (Ekeren?)
- * @author Rafael Ferrer
- * @author Abhishek Mhatre
- * @version 0, 06/06/16
  * 
  * Description: Customer Data Type Class - CSC 225 Prog1
+ * The Customer class is used in conjunction with the BankDriver class in order to simulate a database of 
+ * bank customer accounts for the fictional ES&L Bank. This class provides constructors and methods for 
+ * managing individual Customers as well as an array of Customers (the customer "database"), as a  bank 
+ * teller might do in a real bank. All GUI's for this program are located in the BankDriver class. 
  * 
- * 
- * Input: 
- * 
- * 
- * Compute:
- * 
- * 
- * @author Anna (Ekeren?)
+ * @author Anna Ekeren
  * @author Rafael Ferrer
  * @author Abhishek Mhatre
- * @version 0, 06/13/16
+ * @version 1.0, 16/17/16
  ********************************************************************************************************/
 
 
-import java.text.DecimalFormat;
-import javax.swing.JOptionPane;
 
-public class Customer implements Comparable<Customer>
-{
-	// Invariant of the Customer class:
-	//   1. 
-	//   2. 
-	//   3. 
-	//   4. 
+
+/// Imported Packages ///
+import java.text.*; //for DecimalFormat
+
+
+public class Customer implements Comparable<Customer> {
+	
+	// Invariant of the Customer class: 
+	//   1. The Customer's last name is stored in the instance variable lastName, 
+	//		which must be a single word String with no delimiters. 
+	//   2. The Customer's customer ID is stored in the instance variable custNumber, 
+	//		which must be a single code String with no delimiters. 
+	//   3. The Customer's phone number is stored in the instance variable phoneNumber, 
+	//		which must be a single number String (no letters or characters) with no delimiters. 
+	//   4. The Customer's current account balance is stored in the instance variable acctBalance, 
+	//		which must be nonnegative and less than Double.MAX_VALUE. 
+	//	 5. The constant TRANSACTION_FEE stores the price of a single bank transaction. 
+	//	 6. The constant INTEREST_RATE stores the interest rate for a single bank transaction.
+	
 	
 	/// Private Instance Variables ///
 	
+	//Customer Attributes
 	private String lastName;
 	private String custNumber;
-	private double acctBalance;
 	private String phoneNumber;
-	public static final double TRANSACTION_FEE = 1.50; 
+	private double acctBalance;
+	
+	//Bank Constants
+	private final double TRANSACTION_FEE = 1.50;
+	private final double INTEREST_RATE = 0.045;
 	
 	
-	/// Constructors ///
+	
+	
+	/// Constructors for the Customer Object ///
 	
 	/**
-	 * Description
-	 * @param
-	 *   
+	 * The default constructor that creates a Customer object with a blank last name, Customer ID, and phone number. 
+	 * The Customer's account balance starts at 0.00.
 	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 *  None
+	 * @postcondition
+	 *  A new Customer object with an account balance of 0.00 and a blank last name, Customer ID, and phone number has been created.
 	 **/
-	public Customer()
-	{
+	public Customer(){
+		
 		lastName = "";
-		custNumber = ""; // How should we generate customer numbers?
+		custNumber = "";
 		acctBalance = 0;
 		phoneNumber = "";
 		
 	}//End Customer() Constructor
 	
+	
 	/**
-	 * Description
-	 * @param
-	 *   
+	 * A constructor that creates a Customer object with a specified last name, Customer ID, phone number, and account balance. 
+	 * @param nameLast
+	 *   The last name of the new Customer. This should be a single word with no delimiters.
+	 * @param custNum
+	 *   The Customer ID of the new Customer. This should be a single code with no delimiters.
+	 * @param acctBal
+	 *   The starting account balance of the new customer. This must be a non-negative value that is less than Double.MAX_VALUE.
+	 * @param phoneNum
+	 *   The phone number of the new Customer. This should be a single line of numbers with no delimiters.
 	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 *   The starting account balance must be a non-negative value that is less than Double.MAX_VALUE.
+	 * @postcondition
+	 *   A new Customer object with the last name, Customer ID, phone number, and account balance specified by the user has been created.
+	 * @exception IllegalArgumentException
+	 *   Occurs if acctBal is less than 0.00.
+	 * @exception NumberFormatException
+	 *   Occurs if acctBal is greater than Double.MAX_VALUE.
 	 **/
-	public Customer(String nameLast, String custNum, double acctBal, String phoneNum)
-	{
-		lastName = nameLast;
-		custNumber = custNum;
-		acctBalance = acctBal;
-		phoneNumber = phoneNum;
+	public Customer(String nameLast, String custNum, double acctBal, String phoneNum){
 		
-	}//End Customer(String nameLast, Long custNum, Long acctBal, Long phoneNum) Method
+		//Create the new Customer if acctBal is a legal argument
+		if (acctBal > 0){
+			lastName = nameLast;
+			custNumber = custNum;
+			acctBalance = acctBal;
+			phoneNumber = phoneNum;
+		}
+		//Otherwise an exception will be thrown
+		else {
+			throw new IllegalArgumentException("The starting account balance must be 0.00 or greater!");
+		}
+		
+	}//End Customer(String nameLast, String custNum, double acctBal, String phoneNum) Method
+	
+	
 	
 	
 	/// Accessor Methods for the Private Instance Variables ///
 	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public String getName()
-	{
+	* An accessor method that returns this Customer's last name.
+	* @return
+	*   Returns the last name of the invoking Customer.
+	**/
+	public String getName(){
+		
 		return lastName;
 		
 	}//End getName() Method
 	
+	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public String getCustNumber()
-	{
+	* An accessor method that returns this Customer's customer ID.
+	* @return
+	*   Returns the customer ID of the invoking Customer.
+	**/
+	public String getCustNumber(){
+		
 		return custNumber;
 		
 	}//End getCustNumber() Method
 	
+	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public double getAcctBalance()
-	{
+	* An accessor method that returns this Customer's current account balance.
+	* @return
+	*   Returns the current account balance of the invoking Customer.
+	**/
+	public double getAcctBalance(){
+		
 		return acctBalance;
 		
 	}//End getAcctBalance() Method
 	
+	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public String getPhoneNumber()
-	{
+	* An accessor method that returns this Customer's phone number.
+	* @return
+	*   Returns the phone number of the invoking Customer.
+	**/
+	public String getPhoneNumber(){
+		
 		return phoneNumber;
 		
 	}//End getPhoneNumber() Method
 	
-	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public String toString()
-	{
-		DecimalFormat cashOutput = new DecimalFormat("0.00"); //decimal output format for outputting account balances
-		
-		return "Last Name: " + lastName + ";   Customer Number: " + custNumber + ";   Account Balance: $" + cashOutput.format(acctBalance) + ";   Phone Number: " + phoneNumber;
-		
-	}//End toString() Method
+	
 	
 	
 	/// Mutator Methods for the Private Instance Variables ///
 	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public void setName(String newLastName)
-	{
+	* A mutator method that allows a user to change this Customer's last name. 
+	* @param newLastName
+	*   The new last name the user wishes to set for the invoking Customer.
+	* @postcondition
+	*   The invoking Customer's last name has been changed to newLastName.
+	* @note
+	*   The String newLastName should be a single word with no delimiters.
+	**/
+	public void setName(String newLastName){
+		
 		lastName = newLastName;
 		
 	}//End setName(String newLastName) Method
 	
+	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public void setCustNum(String newCustNum)
-	{
+	* A mutator method that allows a user to change this Customer's Customer ID.
+	* @param newCustNum
+	*   The new customer ID the user wishes to set for the invoking Customer.
+	* @postcondition
+	*   The invoking Customer's customer ID has been changed to newCustNum.
+	* @note
+	*   The String newCustNum should be a single word with no delimiters.
+	**/
+	public void setCustNum(String newCustNum){
+		
 		custNumber = newCustNum;
 		
-	}//End setCustNum(Long newCustNum) Method
+	}//End setCustNum(String newCustNum) Method
+	
 	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public void setAcctBal(double newLAcctBal)
-	{
-		acctBalance = newLAcctBal;
+	* A mutator method that allows a user to change this Customer's account balance.
+	* @param newAcctBal
+	*   The new account balance the user wishes to set for the invoking Customer.
+	* @precondition
+	*   The double newAcctBal must be a non-negative value that is less than Double.MAX_VALUE.
+	* @postcondition
+	*   The invoking Customer's account balance has been changed to newAcctBal.
+	* @exception IllegalArgumentException
+	*   Occurs if newAcctBal is a negative value.
+	* @exception NumberFormatException
+	*   Occurs if newAcctBal is greater than Double.MAX_VALUE.
+	**/
+	public void setAcctBal(double newAcctBal){
 		
-	}//End setAcctBal(Long newLAcctBal) Method
+		//Verify that newAcctBal is a legal argument
+		if (newAcctBal > 0){
+			acctBalance = newAcctBal;
+		}
+		else {
+			throw new IllegalArgumentException("Account balance must be greater than 0!");
+		}
+		
+	}//End setAcctBal(double newAcctBal) Method
+	
 	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public void setPhoneNum(String newPhoneNum)
-	{
+	* A mutator method that allows a user to change this Customer's phone number.
+	* @param newPhoneNum
+	*   The new phone number the user wishes to set for the invoking Customer.
+	* @postcondition
+	*   The invoking Customer's phone number has been changed to newPhoneNum.
+	* @note
+	*   The String newPhoneNum should be a single line of numbers with no delimiters.
+	**/
+	public void setPhoneNum(String newPhoneNum){
+		
 		phoneNumber = newPhoneNum;
 		
-	}//End setPhoneNum(Long newPhoneNum) Method
+	}//End setPhoneNum(String newPhoneNum) Method
+	
+	
 	
 	
 	/// Customer Account Modification Methods ///
 	
 	/**
-	 * Description
-	 * @param amount
-	 *   
-	 * @precondition
-	 *   previous balance
-	 * @postcondition / return
-	 *   amount to be true or false (deposited amount)
-	 * @exception
-	 *   amount cannot be deposited if amount is <= 0
-	 * @note
-	 *   deposits amount if amount is > 0
-	 **/
-	public boolean deposit(double amount)
-	{
-		//Instance Variables
-		boolean successful = false;
-		final double RATE = .045;
+	* An account modification method that allows the user to deposit money to a Customer's account, 
+	* thereby increasing that Customer's account balance. 
+	* @param depositAmount
+	*   The amount of money to deposit into the invoking Customer's account. 
+	* @precondition
+	*   The double depositAmount must be a non-negative value that is less than Double.MAX_VALUE.
+	* @postcondition
+	*   The invoking Customer's account balance has been increased by depositAmount.
+	* @return
+	*   Returns true if the account deposit was successful.
+	* @exception IllegalArgumentException
+	*   Occurs if depositAmount is a negative value.
+	* @exception NumberFormatException
+	*   Occurs if depositAmount is greater than Double.MAX_VALUE.
+	* @note
+	*   If the sum of the invoking Customer's current account balance and depositAmount is greater than Double.MAX_VALUE, 
+	*   then an arithmetic overflow error will occur. 
+	**/
+	public boolean deposit(double depositAmount){
 		
-		if (amount > 0){
-			this.addInterest(RATE);
-			acctBalance += amount;
-			successful = true;
+		//Instance Variables
+		boolean status = false; //Represents the status of the successful completion of the transaction.
+		
+		//Verify that depositAmount is a legal argument
+		if (depositAmount > 0){
+			//First add interest to this Customer's account before depositAmount is added 
+			this.addInterest(INTEREST_RATE);
+			//Add depositAmount to this Customer's account after adding interest
+			acctBalance = acctBalance + depositAmount;
+			status = true;
+		}
+		else {
+			throw new IllegalArgumentException("depositAmount must be greater than 0!");
+		}
+		
+		return status;
+		
+	}//End deposit(double depositAmount) Method
+	
+	
+	/**
+	* An account modification method that allows the user to withdraw money from a Customer's account, 
+	* thereby decreasing that Customer's account balance. 
+	* @param withdrawAmount
+	*   The amount of money to withdraw from the invoking Customer's account. 
+	* @precondition
+	*   The double withdrawAmount must be a non-negative value that is less than Double.MAX_VALUE.
+	*   It also may not be greater than the current account balance. 
+	* @postcondition
+	*   If the transaction is successful, then the invoking Customer's account balance has been decreased 
+	*   by the withdrawAmount and a transaction fee. If there are insufficient funds in this Customer's account, 
+	*   then the transaction is cancelled and no changes are made to the invoking Customer's account balance.
+	* @return
+	*   Returns true if the account withdrawal was successful. 
+	*   Returns false if there were insufficient funds in this Customer's account. 
+	* @exception IllegalArgumentException
+	*   Occurs if withdrawAmount is a negative value.
+	* @exception NumberFormatException
+	*   Occurs if withdrawAmount is greater than Double.MAX_VALUE.
+	**/
+	public boolean withdraw(double withdrawAmount){
+		
+		//Instance Variables
+		boolean status = false; //Represents the status of the successful completion of the transaction.
+		
+		//Verify that withdrawAmount is a legal argument
+		if (withdrawAmount > 0){
+			//Verify that withdrawAmount is available to withdraw from this Customer's account, and that they can afford the fee
+			if ((withdrawAmount + TRANSACTION_FEE) <= acctBalance){
+				acctBalance = acctBalance - (withdrawAmount + TRANSACTION_FEE);
+				status = true;
+			}
+		}//end if
+		else {
+			throw new IllegalArgumentException("depositAmount must be greater than 0!");
+		}
+
+		return status;
+
+	}//End withdraw(double withdrawAmount) Method
+	
+	
+	/**
+	* An account modification method that allows the user to add interest to a Customer's account. 
+	* @param interestRate
+	*   The decimal rate of the interest to be added.
+	* @precondition
+	*   The double interestRate must be greater than 0 and less than Double.MAX_VALUE.
+	* @postcondition
+	*   The invoking Customer's account balance has been increased by the product of interestRate and 
+	*   their current account balance. 
+	* @exception IllegalArgumentException
+	*   Occurs if withdrawAmount is a negative value.
+	* @exception NumberFormatException
+	*   Occurs if withdrawAmount is greater than Double.MAX_VALUE.
+	* @note
+	*   If the sum of the invoking Customer's current account balance and the added interest is greater 
+	*   than Double.MAX_VALUE, then an arithmetic overflow error will occur. 
+	**/
+	public void addInterest(double interestRate){
+		
+		//Verify that interestRate is a legal argument
+		if (interestRate > 0){
+			acctBalance = acctBalance + (acctBalance * interestRate);
+		}
+		else {
+			throw new IllegalArgumentException("interestRate must be greater than 0!");
+		}
+		
+	}//End addInterest(double interestRate) Method
+	
+	
+	
+	
+	/// Overridden toString and Equals Methods ///
+	
+	/**
+	* A method that returns the Customer's labeled account information.
+	* @return 
+	*   Returns a String containing the invoked customer's last name, customer ID, account balance, and phone number.
+	**/
+	public String toString(){
+		
+		//Instance Variables
+		DecimalFormat cashOutput = new DecimalFormat("0.00"); //decimal output format for outputting account balances
+		
+		//Return the Customer's labeled instance variables
+		return "Last Name: " + lastName + "\nCustomer Number: " + custNumber + "\nAccount Balance: $" + cashOutput.format(acctBalance) + "\nPhone Number: " + phoneNumber;
+		
+	}//End toString() Method
+
+	
+	/**
+	 * A method to compare two Customer objects and determine if they are equivalent.
+	 * @param obj
+	 *   The Object that is being compared to the invoking Customer to test for equivalency.
+	 * @postcondition
+	 *   If the Customer objects being compared have the same last name and customer ID, 
+	 *   then equals will return true. Otherwise equals will return false. 
+	 **/
+	public boolean equals(Object obj){
+		
+		//Instance Variables
+		Customer candidate; //Cursor that holds obj, assuming obj is an object of the Customer type
+		boolean isEqual = false; //Outcome of the equivalency comparison
+		
+		//Verify that obj is of the Customer data type
+		if (obj instanceof Customer){
+			candidate = (Customer) obj;
+			//Verify that candidate has the same lastName and custNumber as the invoked Customer
+			if (this.lastName.equals(candidate.lastName) && this.custNumber.equals(candidate.custNumber)){
+				isEqual = true;
+			}
 		}//end if
 		
-		return successful;
+		return isEqual;
 		
-	}//End deposit(double amount) Method
+	}//end equals(Object obj) Method
+	
+	
+	
+	
+	/// Comparable Interface ///
 	
 	/**
-	 * Description
-	 * @param amount
-	 *   
-	 * @precondition
-	 *   previous balance
-	 * @postcondition / return
-	 *   amount value to be true or false (withdrawed amount)
-	 * @exception
-	 *   cannot withdraw amount if amount is < 0 or amount is > balance
-	 * @note
-	 *   withdraws amount of amount is > 0 and amount is < 0
-	 **/
-	public boolean withdraw(double amount)
-	{
-		//Instance Variables
-		boolean successful = false;
-		
-		if (amount > 0){
-			if (amount > acctBalance){
-				JOptionPane.showMessageDialog(null,("Error: Insufficient funds"
-						+ "Customer:" + lastName
-						+ "Requested:" + amount
-						+ "Available: " + acctBalance
-						+ "where " + lastName + "equals the customer's name"
-						+ amount + "equals the amount"
-						+ acctBalance + "equals the balance in the account"), "ES&L Banking System", JOptionPane.WARNING_MESSAGE);
-			}
-			else {
-				acctBalance -= amount + TRANSACTION_FEE;
-				successful = true;
-			}
-		}//end if
-
-		return successful;
-
-	}//End withdraw(double amount) Method
-	
-	/**
-	 * Description
-	 * @param rate
-	 *   
-	 * @precondition
-	 *   acctBalance without interest rate
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   sets the acctBalance (with interest rate)
-	 **/
-	public void addInterest(double rate)
-	{
-		acctBalance = acctBalance + (acctBalance * rate);
-		
-	}//End addInterest() Method
-	
-	
-	/// Comparable Interface and Equals Method ///
-	
-	/**
-	 * A method that returns an integer comparison based on the lexicographical order of the customers last names.
-	 * The comparison is based on the Unicode value of each character in a customer's last name. 
+	 * A method that returns an integer comparison based on the lexicographical order of the Customers last names.
+	 * The comparison is based on the Unicode value of each character in a Customer's last name. 
 	 * @param inputCustomer
-	 *   The Customer object to compare to other Customer objects.
+	 *   The Customer object to compare to the object calling this method.
 	 * @return
 	 *   Returns a negative integer if inputCustomer's last name precedes this Customer's lastName lexicographically.
 	 *   Returns a positive integer if inputCustomer's last name follows this Customer's lastName lexicographically.
 	 *   Returns zero if inputCustomer's last name is the same as this Customer's lastName.
-	 * @note
-	 *   To ensure a pure alphabetical ordering, rather than a lexicographical ordering based on each character's Unicode value, 
-	 *   each customer's last name should be created in the following format: 
-	 *   The first letter should be upper case, while all other letters should be lower case, with no numbers or symbols.
 	 **/
-	public int compareTo(Customer inputCustomer)
-	{
-		int comparison;
+	public int compareTo(Customer inputCustomer){
 		
+		//Instance Variables
+		int comparison; //The return value assigned by the lexicographical order of this Customer's lastName
+		
+		//Use String's compareTo to compare the Customers lastNames
 		comparison = lastName.compareTo(inputCustomer.getName());
 		
 		return comparison;
 		
 	}//End compareTo(Customer inputCustomer) Method
 	
-	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   custNumber must be unique
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public boolean equals(Object obj)
-	{
-		//Instance Variables
-		Customer candidate;
-		boolean isEqual = false;
-		
-		//Verify (1) That obj is of the Customer data type.
-		if (obj instanceof Customer){
-			candidate = (Customer) obj;
-			//Verify (2) That candidate has the same lastName and custNumber as the invoked DoubleArraySeq.
-			if (this.lastName.equals(candidate.lastName) && this.custNumber.equals(candidate.custNumber)){
-				isEqual = true;
-			}//end if
-		}//end if
-		return isEqual;
-		
-	}//end equals(Object obj) Method
 	
 	
-	/// Driver Methods ///
+	
+	/// Additional Methods Required for BankDriver ///
 	
 	/**
-	 * Description
-	 * @param
-	 *   
+	 * A static method that adds a new Customer to the customer database. 
+	 * @param customerDatabase
+	 *   An array of all the Customers in the customer database. 
+	 * @param newCustomer
+	 *   The new Customer to be added to customerDatabase. 
 	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 *   The customerDatabase must be non-null and below its maximum capacity. 
+	 * @return
+	 *   Returns true if newCustomer was successfully added to customerDatabase. 
+	 *   Returns false if there was no open index in customerDatabase to add newCustomer to.
+	 * @exception NullPointerException
+	 *   Occurs if customerDatabase is null. 
 	 **/
-	public static boolean addNewCustomer(Customer newCustomer, Customer[] customerDatabase)
-	{
-		//Instance Variables
-		boolean successful = false;
+	public static boolean addNewCustomer(Customer[] customerDatabase, Customer newCustomer){
 		
+		//Instance Variables
+		boolean status = false; //Represents the status of the completion of the customer addition
+		
+		//Add newCustomer to the first open index in customerDatabase, if there is one
 		for (int i = 0; i < customerDatabase.length; i++){
 			if (customerDatabase[i] == null){
 				customerDatabase[i] = newCustomer;
-				successful = true;
-				return successful;
+				status = true;
+				return status;
 			}
 		}//end for
 		
-		return successful;
+		return status;
 		
-	}//End addNewCustomer(Customer[] customerDatabase) Method
+	}//End addNewCustomer(Customer[] customerDatabase, Customer newCustomer) Method
+	
 	
 	/**
-	 * Description
-	 * @param
-	 *   
+	 * A static method that deletes a Customer from the customer database. 
+	 * @param customerDatabase
+	 *   An array of all the Customers in the customer database. 
+	 * @param index
+	 *   The index location of the Customer to be deleted in customerDatabase. 
 	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 *   The index value must be a valid index of customerDatabase.
+	 * @return
+	 *   Returns true after removing the customer located at index in customerDatabase.
+	 * @exception ArrayIndexOutOfBoundsException
+	 *   Occurs if the index value is negative or greater than or equal to the maximum capacity of customerDatabase. 
 	 **/
-	public static boolean deleteCustomer(Customer[] customerDatabase, int index)
-	{
-		try {
-			customerDatabase[index] = null;
-		}
-		catch (Exception OutOfBounds){
-			return false;
-		}
+	public static boolean deleteCustomer(Customer[] customerDatabase, int index){
+		
+		customerDatabase[index] = null;
 		
 		return true;
 		
 	}//End deleteCustomer(Customer[] customerDatabase, int index) Method
 	
+	
 	/**
-	 * Description
-	 * @param
-	 *   
+	 * A static method that sorts an array of Customers in alphabetical order by last name.
+	 * @param customerDatabase
+	 *   An array of all the Customers in the customer database.   
+	 * @param first
+	 *   The index location of customerDatabase to begin sorting at.
+	 * @param size
+	 *   The number of indexes to sort after first. 
 	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 *   The sum of first and size is less than the maximum capacity of customerDatabase. 
+	 *   The integers first and size are non-negative and less than Integer.MAX_VALUE. 
+	 * @postcondition
+	 *   The elements of customerDatabase have been rearranged in alphabetical order by last name.
+	 * @exception ArrayIndexOutOfBoundsException
+	 *   Occurs if first is negative or greater than or equal to the maximum capacity of customerDatabase. 
+	 *   Occurs if the sum of first and size is negative or greater than or equal to the maximum capacity of customerDatabase.
+	 * @exception NumberFormatException
+	 *   Occurs if first or size are greater than Integer.MAX_VALUE.
 	 **/
-	private static void nameSort(Customer[] customerDatabase, int first, int manyItems)
-	{
+	private static void nameSort(Customer[] customerDatabase, int first, int size){
+		
 		//Instance Variables
 		int big;
 		Customer temp;
 		
 		//Run a selection sort on customerDatabase
-		for (int i = manyItems - 1; i > 0; i--){
-			//Calculate big as the index of the largest value in customerDatabase[first] through customerDatabase[manyItems]
+		for (int i = size - 1; i > 0; i--){
+			//Calculate big as the index of the largest value in customerDatabase[first] through customerDatabase[size]
 			big = first;
 			if (customerDatabase[big] instanceof Customer){
 				for (int j = first + 1; j <= first + i; j++){
@@ -516,31 +537,56 @@ public class Customer implements Comparable<Customer>
 			}//end if
 		}//end for
 		
-	}//End nameSort(Customer[] customerDatabase, int first, int manyItems) Method
+	}//End (Customer[] customerDatabase, int first, int size) Method
+	
 	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 * A static method that returns the index location of a specific Customer in an array of customers.
+	 * @param customerDatabase
+	 *   An array of all the Customers in the customer database. 
+	 * @param findCust
+	 *   The specific Customer that the user is searching for in the array.
+	 * @return
+	 *   If findCust is found in customerDatabase, then the index location that the searched Customer is located at is returned.
+	 *   If findCust is not found in customerDatabase, then -1 is returned. 
 	 **/
-	public static String databaseToString(Customer[] customerDatabase)
-	{
+	public static int findIndex(Customer[] customerDatabase, Customer findCust){
+		
+		//Instance Variables
+		int index; //An index cursor for customerDatabase
+		
+		//Search for the index in customerDatabase that contains this customer and return that index
+		for (index = 0; index < customerDatabase.length; index++){
+			if (customerDatabase[index] instanceof Customer && customerDatabase[index].equals(findCust)){ 
+				return index;
+			}
+		}//end for
+		
+		//If the customer is not found in customerDatabase, then return -1
+		return -1;
+		
+	}//End findIndex(Customer[] customerDatabase, Customer findCust) Method
+	
+	
+	/**
+	 * A static method that returns a string (in the form of a table with a single customer on each line) 
+	 * containing the account information of all the customers in the customer database. 
+	 * @param customerDatabase
+	 *   An array of all the Customers in the customer database. 
+	 * @return
+	 *   The String databaseString that contains the Name, Account ID, Phone Number, and Balance
+	 *   of each customer in the database, formatted to be printed out.   
+	 **/
+	public static String databaseToString(Customer[] customerDatabase){
+		
 		//Instance Variables
 		String databaseString = "Customer Name          Account ID          Phone Number          Account Balance          \n\n";
 		DecimalFormat cashOutput = new DecimalFormat("0.00"); //decimal output format for outputting account balances
 		
-		//Sort the customer database alphabetically by lastName
-		nameSort(customerDatabase, 0, 30);
+		//Sort customerDatabase alphabetically by lastName
+		nameSort(customerDatabase, 0, customerDatabase.length);
 		
-		//Add all customer accounts in the database to the databaseString
+		//Add all customer accounts in the database to databaseString
 		for (int i = 0; i < customerDatabase.length; i++){
 			if (customerDatabase[i] instanceof Customer){
 				databaseString = databaseString 
@@ -555,34 +601,6 @@ public class Customer implements Comparable<Customer>
 		
 	}//End databaseToString(Customer[] customerDatabase) Method
 	
-	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public static int findIndex(Customer[] customerDatabase, Customer findCust)
-	{
-		//Instance Variables
-		int index;
-		
-		//Search for the index in customerDatabase that contains this customer and return that index
-		for (index = 0; index < customerDatabase.length; index++){
-			if (customerDatabase[index] instanceof Customer && customerDatabase[index].equals(findCust)){ 
-				return index;
-			}
-		}//end for
-		
-		//If the customer is not found in customerDatabase, then return -1
-		return -1;
-		
-	}//End findIndex(Customer[] customerDatabase, Customer findCust) Method
 	
 }//End Customer Class
+
