@@ -98,7 +98,7 @@ public class Customer implements Comparable<Customer> {
 	public Customer(String nameLast, String custNum, double acctBal, String phoneNum){
 		
 		//Create the new Customer if acctBal is a legal argument
-		if (acctBal > 0){
+		if (acctBal >= 0){
 			lastName = nameLast;
 			custNumber = custNum;
 			acctBalance = acctBal;
