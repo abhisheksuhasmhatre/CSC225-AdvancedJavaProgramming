@@ -80,122 +80,130 @@ public class BankDriver
 			
 			//Create the customerDatabase from the databaseFile and display it
 			customerDatabase = createCustomerDatabase(databaseFile);
-			for (int i = 0; i < customerDatabase.length; i++){
-				if (customerDatabase[i] instanceof Customer){
-					count++;
-				}
-			}
-			JOptionPane.showMessageDialog(null, 
-					"State of all customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase) + "\n\n"
-					+ "Click 'OK' to continue to the main menu.", 
-					"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 			
-			//Display the Main Menu for the user to manage the database
-			while (choice != 9){
+			//
+			if (customerDatabase != null){
+			
+				//
+				for (int i = 0; i < customerDatabase.length; i++){
+					if (customerDatabase[i] instanceof Customer){
+						count++;
+					}
+				}
 				
-				//Obtain user's Main Menu selection
-				choice = mainMenuInput();
+				//
+				JOptionPane.showMessageDialog(null, 
+						"State of all customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase) + "\n\n"
+						+ "Click 'OK' to continue to the main menu.", 
+						"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 				
-				//Main Menu Switch Board
-				switch(choice){
-				
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-					case 1: //1. Deposit sum to account
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-						customerInfo = customerSearchInput(customerDatabase);
-						amount = doubleAmountInput(choice);
-						if (customerInfo != null){
-							if (((Customer) customerInfo[1]).deposit(amount) == true){
+				//Run the Main Menu GUI
+				while (choice != 9){
+					
+					//Obtain user's Main Menu selection
+					choice = mainMenuInput();
+					
+					//Main Menu Switch Board
+					switch(choice){
+					
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+						case 1: //1. Deposit sum to account
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							customerInfo = customerSearchInput(customerDatabase);
+							amount = doubleAmountInput(choice);
+							if (customerInfo != null){
+								if (((Customer) customerInfo[1]).deposit(amount) == true){
+									JOptionPane.showMessageDialog(null, 
+											"The deposit has been successful. \n\n" 
+											+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
+											"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+								}
+							}//end if
+							break;
+							
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+						case 2: //2. Withdraw sum from account
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							customerInfo = customerSearchInput(customerDatabase);
+							amount = doubleAmountInput(choice);
+							currentCustomer = (Customer) customerInfo[1];
+							if (customerInfo != null){
+								if (currentCustomer.withdraw(amount) == true){
+									JOptionPane.showMessageDialog(null, 
+											"The withdrawl has been successful. \n\n" 
+											+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
+											"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+								}
+								else {
+									JOptionPane.showMessageDialog(null, 
+											"Error: Insufficient funds \n"
+											+ "\nCustomer: " + currentCustomer.getName()
+											+ "\nRequested: " + amount
+											+ "\nAvailable: " + currentCustomer.getAcctBalance(),
+											"ES&L Bank - Customer Account Management System", JOptionPane.ERROR_MESSAGE);
+								}
+							}//end if
+							break;
+							
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+						case 3: //3. Create account
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							currentCustomer = createCustomer(customerDatabase);
+							if (Customer.addNewCustomer(customerDatabase, currentCustomer) == true){
+								count++;
 								JOptionPane.showMessageDialog(null, 
-										"The deposit has been successful. \n\n" 
-										+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
-										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
-							}
-						}//end if
-						break;
-						
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-					case 2: //2. Withdraw sum from account
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-						customerInfo = customerSearchInput(customerDatabase);
-						amount = doubleAmountInput(choice);
-						currentCustomer = (Customer) customerInfo[1];
-						if (customerInfo != null){
-							if (currentCustomer.withdraw(amount) == true){
-								JOptionPane.showMessageDialog(null, 
-										"The withdrawl has been successful. \n\n" 
-										+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
+										"The following customer bank account has been created successfully: \n\n" + currentCustomer.toString(), 
 										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
 							}
 							else {
 								JOptionPane.showMessageDialog(null, 
-										"Error: Insufficient funds \n"
-										+ "\nCustomer: " + currentCustomer.getName()
-										+ "\nRequested: " + amount
-										+ "\nAvailable: " + currentCustomer.getAcctBalance(),
-										"ES&L Bank - Customer Account Management System", JOptionPane.ERROR_MESSAGE);
+										"The customer database is full! \n"
+										+ "The following customer bank account was NOT created: \n\n" + currentCustomer.toString() + "\n\n"
+										+ "Please delete customer bank accounts that are no longer in use to make space available for new accounts.",
+										"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
 							}
-						}//end if
-						break;
-						
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-					case 3: //3. Create account
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-						currentCustomer = createCustomer(customerDatabase);
-						if (Customer.addNewCustomer(customerDatabase, currentCustomer) == true){
-							count++;
+							break;
+							
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+						case 4: //4. View all accounts
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
 							JOptionPane.showMessageDialog(null, 
-									"The following customer bank account has been created successfully: \n\n" + currentCustomer.toString(), 
+									"All customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase), 
 									"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
-						}
-						else {
+							break;
+							
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+						case 5: //5. Delete an account
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							customerInfo = customerSearchInput(customerDatabase);
+							if (customerInfo != null){
+								if (Customer.deleteCustomer(customerDatabase, ((int) customerInfo[0])) == true){
+									count--;
+									JOptionPane.showMessageDialog(null, 
+											"The following customer bank account has been deleted from the system: \n\n" + ((Customer) customerInfo[1]).toString(), 
+											"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+								}
+							}//end if
+							break;
+							
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+						case 9: //6. Quit - Save the changes to the database file and display all customer accounts.
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							FileSaver(databaseFile, customerDatabase);
 							JOptionPane.showMessageDialog(null, 
-									"The customer database is full! \n"
-									+ "The following customer bank account was NOT created: \n\n" + currentCustomer.toString() + "\n\n"
-									+ "Please delete customer bank accounts that are no longer in use to make space available for new accounts.",
-									"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
-						}
-						break;
-						
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-					case 4: //4. View all accounts
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-						JOptionPane.showMessageDialog(null, 
-								"All customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase), 
-								"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
-						break;
-						
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-					case 5: //5. Delete an account
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-						customerInfo = customerSearchInput(customerDatabase);
-						if (customerInfo != null){
-							if (Customer.deleteCustomer(customerDatabase, ((int) customerInfo[0])) == true){
-								count--;
-								JOptionPane.showMessageDialog(null, 
-										"The following customer bank account has been deleted from the system: \n\n" + ((Customer) customerInfo[1]).toString(), 
-										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
-							}
-						}//end if
-						break;
-						
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-					case 9: //6. Quit - Save the changes to the database file and display all customer accounts.
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-						FileSaver(databaseFile, customerDatabase);
-						JOptionPane.showMessageDialog(null, 
-								"State of all customer bank accounts in the database after saving: \n\n" + Customer.databaseToString(customerDatabase), 
-								"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
-						break;
-						
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-					case -1: //Not a user option. Quit without saving.
-				//-----------------------------------------------------------------------------------------------------------------------------------------------
-						choice = 9;
-						break;
-						
-				}//end switch
-			}//end while
+									"State of all customer bank accounts in the database after saving: \n\n" + Customer.databaseToString(customerDatabase), 
+									"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+							break;
+							
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+						case -1: //Not a user option. Quit without saving.
+					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							choice = 9;
+							break;
+							
+					}//end switch
+				}//end while
+			}//end if
 		}//end if
 		
 		//Exit Message
@@ -571,14 +579,25 @@ public class BankDriver
 					acctBal = Double.parseDouble(tokenizer.nextToken());
 					phoneNum = tokenizer.nextToken();
 					newCustomer = new Customer(nameLast, custNum, acctBal, phoneNum);
-					if (Customer.addNewCustomer(customerDatabase, newCustomer) == false){
-						fileScanner.close();
+					try {
+						if (Customer.addNewCustomer(customerDatabase, newCustomer) == false){
+							fileScanner.close();
+							JOptionPane.showMessageDialog(null, 
+									"WARNING: The customer database size limit has been reached! \n"
+									+ "Only the first 30 accounts listed in this customer account database will be imported. \n"
+									+ "If you save this database, all customer accounts that were not imported will be permanently deleted from the database.",
+									"ES&L Bank System", JOptionPane.WARNING_MESSAGE);
+							return customerDatabase;
+						}
+					}//end try
+					catch (Exception IllegalArgumentException){
 						JOptionPane.showMessageDialog(null, 
-								"WARNING: The customer database size limit has been reached! \n"
-								+ "Only the first 30 accounts listed in this customer account database will be imported. \n"
-								+ "If you save this database, all customer accounts that were not imported will be permanently deleted from the database.",
-								"ES&L Bank - Customer Account Management System", JOptionPane.WARNING_MESSAGE);
-						return customerDatabase;
+								"CRITICAL ERROR! CORRUPT CUSTOMER DATABASE! \n"
+								+ "This database contains one or more Customers that share the same Customer ID! \n"
+								+ "Every Customer in the database must have a unique ID! \n\n"
+								+ "Unable to open this corrupt customer database. \n\n",
+								"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
+						return null;
 					}
 				}//end if
 			}//end try
