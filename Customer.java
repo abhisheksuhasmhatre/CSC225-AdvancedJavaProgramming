@@ -16,14 +16,14 @@
  * @author Anna Ekeren
  * @author Rafael Ferrer
  * @author Abhishek Mhatre
- * @version 1.0, 16/17/16
+ * @version 1.0, 16/18/16
  ********************************************************************************************************/
 
 
 
 
 /// Imported Packages ///
-import java.text.*; //for DecimalFormat
+import java.text.*; //for DecimalFormat Class
 
 
 public class Customer implements Comparable<Customer> {
@@ -451,11 +451,21 @@ public class Customer implements Comparable<Customer> {
 	 *   Returns false if there was no open index in customerDatabase to add newCustomer to.
 	 * @exception NullPointerException
 	 *   Occurs if customerDatabase is null. 
+	 * @exception IllegalArgumentException
+	 *   Occurs if customerDatabase contains one or more Customers that share the same Customer ID.
 	 **/
 	public static boolean addNewCustomer(Customer[] customerDatabase, Customer newCustomer){
 		
 		//Instance Variables
 		boolean status = false; //Represents the status of the completion of the customer addition
+		
+		//Verify that each customer ID is unique to customerDatabase
+		//If not, then do not add that Customer to customerDatabase
+		for (int i = 0; i < customerDatabase.length; i++){
+			if (customerDatabase[i] instanceof Customer && customerDatabase[i].getCustNumber().equals(newCustomer.getCustNumber())){
+				throw new IllegalArgumentException("This database contains one or more Customers that share the same Customer ID!");
+			}
+		}//end for
 		
 		//Add newCustomer to the first open index in customerDatabase, if there is one
 		for (int i = 0; i < customerDatabase.length; i++){
