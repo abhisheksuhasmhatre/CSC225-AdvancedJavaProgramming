@@ -6,16 +6,18 @@
  * Course Title: Advanced Java Programming
  * Course Number: CSC 225-805
  * Instructors: Professors Christine Forde and Harry Payne
- * 
- * Description: ES&L Bank Account Manager Program - CSC 225 Prog1
- * 
- * 
- * 
- * 
  * @author Anna Ekeren
  * @author Rafael Ferrer
  * @author Abhishek Mhatre
- * @version 1.0, 06/18/16
+ * @version 1.0, 06/19/16
+ * 
+ * Description: ES&L Bank Account Manager Program Driver Class - CSC 225 Project 1
+ * <p>
+ * The BankDriver class is used in conjunction with the Customer class in order to simulate a database of 
+ * bank customer accounts for the fictional ES&L Bank. This class creates a Customer database (containing
+ * Customer types which are managed by the methods in the Customer class), which can be managed by a user 
+ * through a GUI, whose methods are provided in this BankDriver class. 
+ * 
  ********************************************************************************************************/
 
 
@@ -23,14 +25,20 @@
 
 /// Imported Packages ///
 import java.io.*; //For File, FileNotFoundException, and PrintWriter Classes
+import java.text.DecimalFormat;
 import java.util.*; //For Scanner and StringTokenizer Classes
 import javax.swing.*; //For JOptionPane and JFileChooser Classes
 
 
-public class BankDriver
-{
+public class BankDriver {
+	
 	/// Main Method of BankDriver and runBankTest Method ///
 	
+	/**
+	 * The Main method calls the runBankTest method to initiate the ES&L Bank Account Manager Program.
+	 * @postcondition
+	 *   The ES&L Bank Account Manager Program has been run and then closed. 
+	 **/
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		BankDriver bankTest = new BankDriver();
@@ -39,30 +47,27 @@ public class BankDriver
 
 	}//End Main Method
 	
+	
 	/**
-	 * Description
-	 * @param
-	 * @throws FileNotFoundException 
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 * A driver method that initiates the ES&L Bank Account Manager Program. It begins with a startup message, 
+	 * followed by a prompt to select a Customer database text file. It then generates a Customer array containing
+	 * the database and displays that to the user. After that the user is provided a Main Menu GUI where they can
+	 * manage the Customer database array. After the user chooses to close the program it displays the database again 
+	 * and then closes with an exit message.
+	 * @postcondition
+	 *   The ES&L Bank Account Manager Program has been run and then closed. 
 	 **/
 	public void runBankTest() throws FileNotFoundException {
 		
 		//Instance Variables
-		File databaseFile; //The customer database file selected by the user. 
-		Customer[] customerDatabase;
-		Customer currentCustomer;// Customer cursor
+		File databaseFile; //The Customer database text file that was selected in the FileLoader() method after launching the program.
+		Customer[] customerDatabase; //An array of all the Customers in the customer database. 
 		Object [] customerInfo; //customerInfo[0] contains a Customer's index in customerDatabase, customerInfo[1] contains the Customer
-		double amount = 0;//The amount of money being deposited or withdrawn
-		int count = 0; //The number of customers in customerDatabase
+		Customer currentCustomer; //Customer cursor
+		double amount = 0;//The amount of money being deposited or withdrawn from a Customer account
 		int choice = -1; //The user's menu selection number
+		int count = 0; //A counter that keeps track of the number of customers in customerDatabase
+		DecimalFormat cashOutput = new DecimalFormat("0.00"); //decimal output format for outputting account balances
 		
 		//Startup Message
 		JOptionPane.showMessageDialog(null, 
@@ -70,53 +75,55 @@ public class BankDriver
 				"                                                   ~~~ ES&L Bank ~~~\n" 
 				+ "                                Customer Account Managament System\n\n"
 				+ "Please select a customer account database to manage after clicking 'OK'.", 
-				"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+				"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 		
-		//Have the user select the customer databaseFile to be used
+		//Have the user select the Customer databaseFile to be used
 		databaseFile = FileLoader();
 		
 		//Run the program with the selected databaseFile, or close the program if no file was chosen
 		if (databaseFile != null){
 			
-			//Create the customerDatabase from the databaseFile and display it
+			//Create customerDatabase from databaseFile
 			customerDatabase = createCustomerDatabase(databaseFile);
 			
-			//
+			//If a customerDatabase was successfully created, then display the customerDatabase and then run the Main Menu
 			if (customerDatabase != null){
 			
-				//
+				//Update count with the number of Customers in customerDatabase
 				for (int i = 0; i < customerDatabase.length; i++){
 					if (customerDatabase[i] instanceof Customer){
 						count++;
 					}
 				}
 				
-				//
+				//Display customerDatabase
 				JOptionPane.showMessageDialog(null, 
 						"State of all customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase) + "\n\n"
-						+ "Click 'OK' to continue to the main menu.", 
-						"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+						+ "Click 'OK' to continue to the Main Menu.", 
+						"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 				
-				//Run the Main Menu GUI
+				//Loop the Main Menu GUI and close the program if the user selects option 9
 				while (choice != 9){
-					
 					//Obtain user's Main Menu selection
 					choice = mainMenuInput();
-					
 					//Main Menu Switch Board
 					switch(choice){
 					
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
 						case 1: //1. Deposit sum to account
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							//Prompt the user to search for the Customer 
 							customerInfo = customerSearchInput(customerDatabase);
-							amount = doubleAmountInput(choice);
+							//Verify that the Customer was found in customerDatabase
 							if (customerInfo != null){
-								if (((Customer) customerInfo[1]).deposit(amount) == true){
+								currentCustomer = (Customer) customerInfo[1];
+								//Prompt the user to enter the amount to deposit
+								amount = doubleAmountInput(choice);
+								//Run the deposit and verify that it was successful
+								if (currentCustomer.deposit(amount) == true){
 									JOptionPane.showMessageDialog(null, 
-											"The deposit has been successful. \n\n" 
-											+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
-											"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+											currentCustomer.getName() + " balance after deposit with interest added: $" + cashOutput.format(currentCustomer.getAcctBalance()), 
+											"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 								}
 							}//end if
 							break;
@@ -124,23 +131,25 @@ public class BankDriver
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
 						case 2: //2. Withdraw sum from account
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							//Prompt the user to search for the Customer
 							customerInfo = customerSearchInput(customerDatabase);
-							amount = doubleAmountInput(choice);
-							currentCustomer = (Customer) customerInfo[1];
+							//Verify that the Customer was found in customerDatabase
 							if (customerInfo != null){
+								currentCustomer = (Customer) customerInfo[1];
+								//Prompt the user to enter the amount to withdraw
+								amount = doubleAmountInput(choice);
 								if (currentCustomer.withdraw(amount) == true){
 									JOptionPane.showMessageDialog(null, 
-											"The withdrawl has been successful. \n\n" 
-											+ "The new balance for this account is below: \n\n" + ((Customer) customerInfo[1]).toString(), 
-											"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+											currentCustomer.getName() + " balance after withdrawal with transaction fee paid: $" + cashOutput.format(currentCustomer.getAcctBalance()), 
+											"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 								}
 								else {
 									JOptionPane.showMessageDialog(null, 
-											"Error: Insufficient funds \n"
+											"Error: Insufficient funds."
 											+ "\nCustomer: " + currentCustomer.getName()
-											+ "\nRequested: " + amount
-											+ "\nAvailable: " + currentCustomer.getAcctBalance(),
-											"ES&L Bank - Customer Account Management System", JOptionPane.ERROR_MESSAGE);
+											+ "\nRequested: $" + cashOutput.format(amount)
+											+ "\nAvailable: $" + cashOutput.format(currentCustomer.getAcctBalance()),
+											"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
 								}
 							}//end if
 							break;
@@ -148,20 +157,25 @@ public class BankDriver
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
 						case 3: //3. Create account
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
-							currentCustomer = createCustomer(customerDatabase);
-							if (Customer.addNewCustomer(customerDatabase, currentCustomer) == true){
-								count++;
-								JOptionPane.showMessageDialog(null, 
-										"The following customer bank account has been created successfully: \n\n" + currentCustomer.toString(), 
-										"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
-							}
+							//Verify there is room in this customerDatabase first
+							if (count < customerDatabase.length){
+								//Prompt the user to create the new Customer if there is space available
+								currentCustomer = createCustomer(customerDatabase);
+								//Add the Customer to customerDatabase and verify it was successful
+								if (Customer.addNewCustomer(customerDatabase, currentCustomer) == true){
+									count++;
+									JOptionPane.showMessageDialog(null, 
+											"The following customer bank account has been created successfully: \n\n" + currentCustomer.toString(), 
+											"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
+								}
+							}//end if
+							//There is no more room for new Customers in customerDatabase
 							else {
 								JOptionPane.showMessageDialog(null, 
 										"The customer database is full! \n"
-										+ "The following customer bank account was NOT created: \n\n" + currentCustomer.toString() + "\n\n"
 										+ "Please delete customer bank accounts that are no longer in use to make space available for new accounts.",
-										"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
-							}
+										"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
+							}//end else
 							break;
 							
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -169,19 +183,23 @@ public class BankDriver
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
 							JOptionPane.showMessageDialog(null, 
 									"All customer bank accounts in the database: \n\n" + Customer.databaseToString(customerDatabase), 
-									"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+									"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 							break;
 							
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
 						case 5: //5. Delete an account
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
+							//Prompt the user to search for the Customer
 							customerInfo = customerSearchInput(customerDatabase);
+							//Verify that the Customer was found in customerDatabase
 							if (customerInfo != null){
+								currentCustomer = (Customer) customerInfo[1];
+								//Delete the Customer from customerDatabase and verify it was successful
 								if (Customer.deleteCustomer(customerDatabase, ((int) customerInfo[0])) == true){
 									count--;
 									JOptionPane.showMessageDialog(null, 
-											"The following customer bank account has been deleted from the system: \n\n" + ((Customer) customerInfo[1]).toString(), 
-											"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+											currentCustomer.getName() + " is deleted.",  
+											"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 								}
 							}//end if
 							break;
@@ -189,7 +207,7 @@ public class BankDriver
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
 						case 9: //6. Quit - Save the changes to the database file and display all customer accounts.
 					//-----------------------------------------------------------------------------------------------------------------------------------------------
-							FileSaver(databaseFile, customerDatabase);
+							FileSaver(customerDatabase, databaseFile);
 							JOptionPane.showMessageDialog(null, 
 									"State of all customer bank accounts in the database after saving: \n\n" + Customer.databaseToString(customerDatabase), 
 									"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
@@ -222,7 +240,7 @@ public class BankDriver
 	/// User Input Methods ///
 	
 	/**
-	 * A private static GUI input method that displays the Main Menu for the ES&L Bank Account Manager program and returns a user input. 
+	 * A private static GUI input method used by runBankTest that displays the Main Menu for the ES&L Bank Account Manager program and returns a user input. 
 	 * The menu contains the following options:
 	 * <p>
 	 *    1. Deposit sum to account
@@ -317,7 +335,7 @@ public class BankDriver
 	
 	
 	/**
-	 * A private static GUI input method that allows the user to input a Customer to search for in 
+	 * A private static GUI input method used by runBankTest that allows the user to input a Customer to search for in 
 	 * customerDatabase. If the Customer is found, then an Object array is returned containing the 
 	 * Customer's index location in customerDatabase in objectArray[0] and the Customer object 
 	 * itself in objectArray[1]. If the Customer is not found, then this method returns null.
@@ -339,34 +357,40 @@ public class BankDriver
 		String custNum; //The Customer ID of the customer the user is searching for
 		int index; //The index location in customerDatabase where the Customer is stored
 		
-		//Obtain the last name of the Customer from the user
-		nameLast = JOptionPane.showInputDialog(null, 
-				"Enter the Customer's Name: \n", 
-				"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
-		
-		//Obtain the Customer ID of the Customer from the user
-		custNum = JOptionPane.showInputDialog(null, 
-				"Enter the Customer's ID: \n", 
-				"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
-
-		//Find the Customer in the customerDatabase and return the Customer and their index location if found
-		findCust = new Customer(nameLast, custNum, 0, "");
-		index = Customer.findIndex(customerDatabase, findCust);
-		//The Customer was not found in customerDatabase
-		if (index == -1){
-			JOptionPane.showMessageDialog(null, 
-					findCust.getName() 
-					+ " with the  Customer ID " 
-					+ findCust.getCustNumber() 
-					+ " could not be found in the database. \n", 
-					"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
+		try {
+			//Obtain the last name of the Customer from the user
+			nameLast = JOptionPane.showInputDialog(null, 
+					"Enter the Customer's Name: \n", 
+					"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
+			
+			//Obtain the Customer ID of the Customer from the user
+			custNum = JOptionPane.showInputDialog(null, 
+					"Enter the Customer's ID: \n", 
+					"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
+	
+			//Find the Customer in the customerDatabase and return the Customer and their index location if found
+			findCust = new Customer(nameLast, custNum, 0, "");
+			index = Customer.findIndex(customerDatabase, findCust);
+			//The Customer was not found in customerDatabase
+			if (index == -1){
+				JOptionPane.showMessageDialog(null, 
+						findCust.getName() 
+						+ " with the  Customer ID " 
+						+ findCust.getCustNumber() 
+						+ " could not be found in the database. \n", 
+						"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
+				return null;
+			}
+			//The Customer was found in customerDatabase
+			else {
+				findCust = customerDatabase[index];
+				custInfo[0] = index;
+				custInfo[1] = findCust;
+			}
+		}//end try
+		//If the user closes or cancels any GUI prompt
+		catch (Exception multipleExceptions){
 			return null;
-		}
-		//The Customer was found in customerDatabase
-		else {
-			findCust = customerDatabase[index];
-			custInfo[0] = index;
-			custInfo[1] = findCust;
 		}
 		
 		return custInfo;
@@ -375,7 +399,7 @@ public class BankDriver
 	
 	
 	/**
-	 * A private static GUI input method that obtains double input from the user for Customer account deposits and withdrawals. 
+	 * A private static GUI input method used by runBankTest that obtains double input from the user for Customer account deposits and withdrawals. 
 	 * @param choice
 	 *   The user's main mainMenuInput when calling this method. 
 	 *   This differentiates between a deposit or withdrawal. 
@@ -439,147 +463,158 @@ public class BankDriver
 	/// Customer and Customer Database Creation Methods ///
 	
 	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
+	 * A private static GUI method used by runBankTest that allows the user to create a new Customer object
+	 * by enter the new Customer's parameters. This method verifies that the user creates a new Customer with
+	 * a Customer ID unique to this customerDatabase. Once the Customer has been created it is returned for use.
+	 * @param customerDatabase
+	 *   An array of all the Customers in the customer database. 
+	 * @return
+	 *   The new Customer object that the user has created.
+	 * @exception HeadlessException
+	 *   Uncaught exception that occurs if called in an environment that does not support a keyboard.
+	 * @exception NumberFormatException
+	 *   Caught exception that occurs if the user inputs anything other than a double value for the Customer's account balance. 
 	 **/
 	private static Customer createCustomer(Customer[] customerDatabase){
 		
 		//Instance Variables
-		Customer newCustomer;
-		String nameLast;
-		String custNum;
-		String phoneNum;
-		double acctBal = 0;
-		boolean uniqueID;
-		boolean legalDouble;
+		Customer newCustomer; //The new Customer object the user will create and return
+		String nameLast; //The new Customer's last name
+		String custNum; //The new Customer's Customer ID
+		String phoneNum; //The new Customer's phone number
+		double acctBal = 0; //The new Customer's account balance
+		boolean uniqueID; //False if the user has entered a non-unique Customer ID
+		boolean legalDouble; //False if the user has entered illegal input for a double
 		
 		//Obtain the last name that will be used for this account
 		nameLast = JOptionPane.showInputDialog(null, 
-				"Add a new customer bank account: Customer Name \n\n"
-				+ "Please enter the last name that will be used for this account: \n", 
-				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
+				"Enter Customer's Name: \n", 
+				"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
 		
-		//Obtain the customer number that will be used for this account
+		//Obtain the Customer ID that will be used for this account
 		do {
 			uniqueID = true;
 			custNum = JOptionPane.showInputDialog(null, 
-					"Add a new customer bank account: Customer ID \n\n"
-					+ "Please enter the customer ID that will be used for this account: \n", 
-					"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
-			//Verify that the custNum is unique before continuing
+					"Enter Customer's Number, e.g., 11111: \n", 
+					"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
+			//Verify that custNum is unique to this customerDatabase before continuing
 			for (int i = 0; i < customerDatabase.length; i++){
-				if (customerDatabase[i] instanceof Customer){
+				if (customerDatabase[i] instanceof Customer && custNum != null){
 					if (custNum.equals(customerDatabase[i].getCustNumber())){
 						uniqueID = false;
 						JOptionPane.showMessageDialog(null, 
-								"Error! This customer ID is already in use. \n"
-								+ "Please enter a new customer ID after clicking 'OK'.", 
-								"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+								"Error! This Customer ID is already in use. \n"
+								+ "Please enter a new Customer ID after clicking 'OK'.", 
+								"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
 					}
 				}//end if
 			}//end for
 		} while (uniqueID == false); //end do-while
-		
-		//Obtain the phone number that will be used for this account
-		phoneNum = JOptionPane.showInputDialog(null, 
-				"Add a new customer bank account: Customer Phone Number \n\n"
-				+ "Please enter the phone number that will be used for this account: \n", 
-				"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE);
 		
 		//Obtain the account balance of this account
 		do {
 			legalDouble = true;
 			try {
 				acctBal = Double.parseDouble(JOptionPane.showInputDialog(null, 
-						"Add a new customer bank account: Account Balance \n\n"
-						+ "Please enter the current account balance for this account: \n", 
-						"ES&L Bank - Customer Account Management System", JOptionPane.QUESTION_MESSAGE));
+						"Enter Customer's Balance, e.g., 1000.00: \n", 
+						"ES&L Bank System", JOptionPane.QUESTION_MESSAGE));
 				if (acctBal < 0){
 					legalDouble = false;
 					JOptionPane.showMessageDialog(null, 
-							"Error! You must enter a decimal amount greater than 0.00. \n"
-							+ "Negative amounts, letters, and characters are not allowed.", 
+							"Error! You must enter an account balance greater than 0.00. \n", 
 							"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
 				}
-			}
+			}//end try
 			catch (Exception NumberFormatException){
 				legalDouble = false;
 				JOptionPane.showMessageDialog(null, 
-						"Error! You must enter a decimal amount greater than 0.00. \n"
+						"Error! You must enter a decimal number amount greater than 0.00. \n"
 						+ "Negative amounts, letters, and characters are not allowed.", 
 						"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
 			}
 		} while (legalDouble == false); //end do-while
 		
-		//Create the new customer account
+		//Obtain the phone number that will be used for this account
+				phoneNum = JOptionPane.showInputDialog(null, 
+						"Enter Customer's Phone Number: \n", 
+						"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
+		
+		//Create the new Customer object and return it
 		newCustomer = new Customer(nameLast, custNum, acctBal, phoneNum);
 		
 		return newCustomer;
 		
-	}//End createCustomer() Method
+	}//End createCustomer(Customer[] customerDatabase) Method
 	
 	
 	/**
-	 * This method reads the golfer "database" text file selected by the FileLoader() method and generates a golfer TreeBag from it to be used in this program.
-	 * @param database
-	 *   the golfer "database" text file selected by the FileLoader() method
+	 * This method reads the Customer account database text file selected by the FileLoader() method and generates 
+	 * a new Customer object for each valid Customer in databaseFile. It then places these Customer's into an Customer array
+	 * where they can be managed by the other methods in the BankDriver class. 
+	 * @param databaseFile
+	 *   The Customer database text file selected by the FileLoader() method
 	 * @precondition
-	 *   The database text file selected must contain a single golfer's information on each line in the following order: 
-	 *   1. Golfer's Last Name (first letter must be upper case, all other letters must be lower case, no numbers or symbols)
-	 *   2. Number of Rounds (integer number between 0 and 999)
-	 *   3. Handicap (integer number between 0 and 20)
-	 *   4. Average Score (decimal number between 0 and 999)
-	 *   For each golfer, each piece of information may be separated with any of the following delimiters: " ,;:_\t"
-	 *   An empty text file may also be loaded to begin a new empty golfer "database".
-	 *   A text file in any format other than the exact formats specified above will NOT work with the GolferScoresTree class.
+	 *   The databaseFile selected must contain a single Customer's information on each line in the following order: 
+	 *   <p>
+	 *   1. Customer's Last Name (must be a single word String with no delimiters)
+	 *   <p>
+	 *   2. Customer's ID (must be a single code String with no delimiters)
+	 *   <p>
+	 *   3. Customer's Account Balance (must be a nonnegative double less than Double.MAX_VALUE)
+	 *   <p>
+	 *   4. Customer's Phone Number (must be a single number String (no letters or characters) with no delimiters)
+	 *   <p>
+	 *   For each Customer, each piece of information may be separated with any of the following delimiters: " "  ","  ";"  ":"  "_"  "\t"
+	 *   An empty text file may also be loaded to begin a new empty Customer database.
+	 *   Every customer in databaseFile must have a unique Customer ID. If this precondition is not met, then the databaseFile will not open and
+	 *   the system will shut down as a security measure. 
 	 * @throws FileNotFoundException
+	 *   Uncaught exception that occurs if an attempt to open the file denoted by a specified pathname has failed. 
+	 * @throws IllegalArgumentException
+	 *   Caught exception that occurs if two or more Customers in databaseFile share the same Customer ID. If this occurs, 
+	 *   then the databaseFile will not open and the system will shut down as a security measure.
 	 * @note
-	 *   To ensure a pure alphabetical ordering of golfers, rather than a lexicographical ordering based on each character's Unicode value, 
-	 *   each golfer's last name should be created in the following format: 
-	 *   The first letter should be upper case, while all other letters should be lower case, with no numbers or symbols.
+	 *   If a single line of Customer information is corrupt and that Customer cannot be created, then that line will be 
+	 *   skipped and the user will be notified that that line of databaseFile has not been included in the Customer database.
 	 **/
-	private static Customer[] createCustomerDatabase(File database) throws FileNotFoundException {
+	private static Customer[] createCustomerDatabase(File databaseFile) throws FileNotFoundException {
 		
 		//Instance Variables
-		final int DATABASE_SIZE = 30;
-		Customer[] customerDatabase = new Customer[DATABASE_SIZE];
+		final int DATABASE_SIZE = 30; //The constant size of all Customer databases created
+		Customer[] customerDatabase = new Customer[DATABASE_SIZE]; //An array of all the Customers in the customer database file. 
 		String readCustomer; //A cursor for each line of text in the database text file
-		Customer newCustomer; //A cursor used to add customers and their account information to the customerDatabase
-		String nameLast;
-		String custNum;
-		String phoneNum;
-		double acctBal;
-		int line = 1;
+		Customer newCustomer; //A newly created Customer object to be added to customerDatabase
+		String nameLast; //The last name of a newly created Customer object
+		String custNum; //The Customer ID of a newly created Customer object
+		String phoneNum; //The phone number of a newly created Customer object
+		double acctBal; //The account balance of a newly created Customer object
+		int line = 1; //A counter to keep track of the current line number of database being read
 		
 		//Scanner Instantiation
-		Scanner fileScanner = new Scanner(database); //Used to read the database text file
+		Scanner fileScanner = new Scanner(databaseFile); //Used to read the database text file
 		fileScanner.useDelimiter(System.getProperty("line.separator")); //Allows us to read the database text file one line at a time
 		
 		//String Tokenizer Instantiation
 		StringTokenizer tokenizer; 
-		String delimeters = " ,;:_\t"; //For each golfer (new line), each piece of information may be separated with any of these delimiters
+		String delimeters = " ,;:_\t"; //For each Customer (new line), each piece of information may be separated with any of these delimiters
 		
-		//Read the database text file one line at a time, construct each golfer, add each golfer's stats, then add the golfer to golferDatabase
+		//Read the database text file one line at a time, construct each Customer, then add each Customer to customerDatabase
 		while (fileScanner.hasNextLine()){
 			try {
+				//Read the next line in database
 				readCustomer = fileScanner.nextLine();
 				tokenizer = new StringTokenizer(readCustomer, delimeters);
+				//Verify that the line is not empty
 				if (tokenizer.hasMoreTokens()){
+					//Obtain Customer parameters from the line and then create the new Customer
 					nameLast = tokenizer.nextToken();
 					custNum = tokenizer.nextToken();
 					acctBal = Double.parseDouble(tokenizer.nextToken());
 					phoneNum = tokenizer.nextToken();
 					newCustomer = new Customer(nameLast, custNum, acctBal, phoneNum);
+					//Add the new Customer to customerDatabase
 					try {
+						//There is no more room in customerDatabase to add more Customers
 						if (Customer.addNewCustomer(customerDatabase, newCustomer) == false){
 							fileScanner.close();
 							JOptionPane.showMessageDialog(null, 
@@ -590,6 +625,7 @@ public class BankDriver
 							return customerDatabase;
 						}
 					}//end try
+					//If two or more Customers in database share the same Customer ID
 					catch (Exception IllegalArgumentException){
 						JOptionPane.showMessageDialog(null, 
 								"CRITICAL ERROR! CORRUPT CUSTOMER DATABASE! \n"
@@ -597,14 +633,16 @@ public class BankDriver
 								+ "Every Customer in the database must have a unique ID! \n\n"
 								+ "Unable to open this corrupt customer database. \n\n",
 								"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
+						//Closes the system as a security measure, due to a corrupt database
 						return null;
 					}
 				}//end if
 			}//end try
+			//If there is a corrupt line in database that prevents that Customer from being created and added to customerDatabase
 			catch (Exception multipleExceptions){
 				JOptionPane.showMessageDialog(null, 
-						"Error! Error in database file input! \n\n"
-						+ "Line " + line + " of the database has been ignored and the customer on this line will not be added.", 
+						"Error in database file line " + line + "! \n\n"
+						+ "Line " + line + " of the customer database has been ignored and the customer on this line will not be added.", 
 						"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
 			}
 			line++;
@@ -614,7 +652,7 @@ public class BankDriver
 		
 		return customerDatabase;
 		
-	}//End createCustomerDatabase(File database) Method
+	}//End createCustomerDatabase(File databaseFile) Method
 	
 	
 	
@@ -622,18 +660,22 @@ public class BankDriver
 	/// Database File Loader and File Saver Methods ///
 	
 	/**
-	 * This method allows the user to select the text file containing the Customer accounts to be managed. 
+	 * This method allows the user to select the Customer database text file containing the Customer accounts to be managed. 
 	 * @precondition
-	 *   The file selected by the user must contain a single (one word) name and a single integer key on each line of the text file. 
-	 *   The text file selected must contain 241 or fewer elements. 
-	 *   The name and key for each element must be be separated by one of the following delimiters: " "   ","   ";"   ":"   "_"   "\t" 
+	 *   The Customer database text file selected must contain a single Customer's information on each line in the following order: 
+	 *   1. Customer's Last Name (must be a single word String with no delimiters)
+	 *   2. Customer's ID (must be a single code String with no delimiters)
+	 *   3. Customer's Account Balance (must be a nonnegative double less than Double.MAX_VALUE)
+	 *   4. Customer's Phone Number (must be a single number String (no letters or characters) with no delimiters)
+	 *   For each Customer, each piece of information may be separated with any of the following delimiters: " "  ","  ";"  ":"  "_"  "\t"
+	 *   An empty text file may also be loaded to begin a new empty Customer database.
 	 * @return
-	 *   Returns the user selected text file containing the names and keys to be used.
+	 *   Returns the user selected text file database containing the Customer data to be used.
 	 **/
 	private static File FileLoader(){
 		
 		//Instance Variables
-		File databaseFile; //This is the text file where all the Customers are stored
+		File databaseFile; //This is the text file where all the Customers data is stored
 		JFileChooser fileSelector; //A file selector UI
 		
 		//Launch a JFileChooser window to select the file to be used
@@ -644,24 +686,25 @@ public class BankDriver
 		if (status == JFileChooser.APPROVE_OPTION){
 			databaseFile = fileSelector.getSelectedFile();
 			JOptionPane.showMessageDialog(null, 
-					"You have selected the file located at: \n" + databaseFile.toString(), 
-					"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+					"You have selected the customer database file located at: \n" + databaseFile.toString(), 
+					"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 			return databaseFile;
 		}
 		//If no file is selected, give the user a second chance to select a file or close the program
 		else if (status == JFileChooser.CANCEL_OPTION){
 			JOptionPane.showMessageDialog(null, 
-					"Error! You must select a file to continue..."
-					+ "You may click 'Cancel' again to close the program.", 
-					"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
-			//Launch the JFileChooser window to select the file to be used
+					"Error! You must select a file to continue.\n\n"
+					+ "You may select an empty text file to create a new customer database.\n"
+					+ "Or you may click 'Cancel' again to close the program.\n", 
+					"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
+			//Re-launch the JFileChooser window to select the file to be used 
 			status = fileSelector.showOpenDialog(null);
 			//Once a file has been selected, return that file
 			if (status == JFileChooser.APPROVE_OPTION){
 				databaseFile = fileSelector.getSelectedFile();
 				JOptionPane.showMessageDialog(null, 
-						"You have selected the file located at: \n" + databaseFile.toString(), 
-						"ES&L Bank - Customer Account Management System", JOptionPane.PLAIN_MESSAGE);
+						"You have selected the customer database file located at: \n" + databaseFile.toString(), 
+						"ES&L Bank System", JOptionPane.PLAIN_MESSAGE);
 				return databaseFile;
 			}
 			//Close the program if no file is selected
@@ -677,22 +720,22 @@ public class BankDriver
 	
 	
 	/**
-	 * This method overwrites the golfer "database" text file selected in the FileLoader() method with any changes made while running this program, then saves the file.
-	 * @param database
-	 *   The golfer "database" text file selected in the FileLoader() method.
-	 * @param golferDatabase
-	 *   The golfer TreeBag created by the createGolferDatabase() method.
-	 * @postcondition / return
-	 *   The golfer "database" text file selected in the FileLoader() method has been overwritten with any changes made while running this program and saved.
+	 * This method overwrites the Customer databaseFile text file selected in the FileLoader() method with any changes made while running this program.
+	 * It then saves databaseFile with those changes.
+	 * @param databaseFile
+	 *   The Customer database text file that was selected in the FileLoader() method after launching the program. 
+	 * @param customerDatabase
+	 *   An array of all the Customers in the customer database. 
+	 * @postcondition
+	 *   The Customer databaseFile text file selected in the FileLoader() method has been overwritten with any changes made while running this program and saved.
 	 * @throws FileNotFoundException
-	 * @Note
-	 *   This method uses the writeToDatabase() method to actually write over the previous golfer "database" text file. Then this method saves that file.
+	 *   Uncaught exception that occurs if an attempt to open the file denoted by a specified pathname has failed. 
 	 **/
-	private static void FileSaver(File databaseFile, Customer[] customerDatabase) throws FileNotFoundException {
+	private static void FileSaver(Customer[] customerDatabase, File databaseFile) throws FileNotFoundException {
 		
 		//Instance Variables
 		PrintWriter fileWriter; //Writes a line of text to the text file database
-		Customer currentCustomer;// Customer cursor
+		Customer currentCustomer; //Customer cursor
 		
 		//Write over the database text file with all changes made to golferDatabase and then save the file
 		fileWriter = new PrintWriter(databaseFile);
@@ -704,7 +747,7 @@ public class BankDriver
 		}//end for
 		fileWriter.close();
 
-	}//End FileSaver(File databaseFile, Customer[] customerDatabase) Method
+	}//End FileSaver(Customer[] customerDatabase, File databaseFile) Method
 		
 	
 }//End BankDriver Class
