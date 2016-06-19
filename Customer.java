@@ -6,17 +6,28 @@
  * Course Title: Advanced Java Programming
  * Course Number: CSC 225-805
  * Instructors: Professors Christine Forde and Harry Payne
+ * @author Anna Ekeren
+ * @author Rafael Ferrer
+ * @author Abhishek Mhatre
+ * @version 1.0, 16/19/16
  * 
- * Description: Customer Data Type Class - CSC 225 Prog1
+ * Description: Customer Data Type Class - CSC 225 Project 1
+ * <p>
  * The Customer class is used in conjunction with the BankDriver class in order to simulate a database of 
  * bank customer accounts for the fictional ES&L Bank. This class provides constructors and methods for 
  * managing individual Customers as well as an array of Customers (the customer "database"), as a  bank 
  * teller might do in a real bank. All GUI's for this program are located in the BankDriver class. 
+ * <p>
+ * A Customer has the following attributes:
+ *    <p>
+ *    1. Last Name
+ *    <p>
+ *    2. Customer ID
+ *    <p>
+ *    3. Account Balance
+ *    <p>
+ *    4. Phone Number
  * 
- * @author Anna Ekeren
- * @author Rafael Ferrer
- * @author Abhishek Mhatre
- * @version 1.0, 16/18/16
  ********************************************************************************************************/
 
 
@@ -590,7 +601,7 @@ public class Customer implements Comparable<Customer> {
 	public static String databaseToString(Customer[] customerDatabase){
 		
 		//Instance Variables
-		String databaseString = "Customer Name          Account ID          Phone Number          Account Balance          \n\n";
+		String databaseString = "Customer Name, Account ID, Account Balance, Phone Number \n";
 		DecimalFormat cashOutput = new DecimalFormat("0.00"); //decimal output format for outputting account balances
 		
 		//Sort customerDatabase alphabetically by lastName
@@ -600,10 +611,10 @@ public class Customer implements Comparable<Customer> {
 		for (int i = 0; i < customerDatabase.length; i++){
 			if (customerDatabase[i] instanceof Customer){
 				databaseString = databaseString 
-						+ customerDatabase[i].getName() + "                    "
-						+ customerDatabase[i].getCustNumber() + "                    "
-						+ customerDatabase[i].getPhoneNumber() + "                    "
-						+ "$" + cashOutput.format(customerDatabase[i].getAcctBalance()) + "                    \n";
+						+ customerDatabase[i].getName() + ", "
+						+ customerDatabase[i].getCustNumber() + ", "
+						+ "$" + cashOutput.format(customerDatabase[i].getAcctBalance()) + ", "
+						+ customerDatabase[i].getPhoneNumber() + " \n";
 			}
 		}//end for
 		
