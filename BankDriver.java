@@ -11,7 +11,7 @@
  * @author Abhishek Mhatre
  * @version 1.0, 06/19/16
  * 
- * Description: ES&L Bank Account Manager Program Driver Class - CSC 225 Project 1
+ * Description ES&L Bank Account Manager Program Driver Class - CSC 225 Project 1
  * <p>
  * The BankDriver class is used in conjunction with the Customer class in order to simulate a database of 
  * bank customer accounts for the fictional ES&L Bank. This class creates a Customer database (containing
@@ -487,9 +487,11 @@ public class BankDriver {
 		boolean legalDouble; //False if the user has entered illegal input for a double
 		
 		//Obtain the last name that will be used for this account
+		do {
 		nameLast = JOptionPane.showInputDialog(null, 
 				"Enter Customer's Name: \n", 
 				"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
+		} while (nameLast == null  || nameLast.equals(""));
 		
 		//Obtain the Customer ID that will be used for this account
 		do {
@@ -509,7 +511,7 @@ public class BankDriver {
 					}
 				}//end if
 			}//end for
-		} while (uniqueID == false); //end do-while
+		} while (uniqueID == false || custNum == null  || custNum.equals("")); //end do-while
 		
 		//Obtain the account balance of this account
 		do {
@@ -522,7 +524,7 @@ public class BankDriver {
 					legalDouble = false;
 					JOptionPane.showMessageDialog(null, 
 							"Error! You must enter an account balance greater than 0.00. \n", 
-							"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+							"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
 				}
 			}//end try
 			catch (Exception NumberFormatException){
@@ -530,14 +532,16 @@ public class BankDriver {
 				JOptionPane.showMessageDialog(null, 
 						"Error! You must enter a decimal number amount greater than 0.00. \n"
 						+ "Negative amounts, letters, and characters are not allowed.", 
-						"ES&L Bank - Error!", JOptionPane.ERROR_MESSAGE);
+						"ES&L Bank System", JOptionPane.ERROR_MESSAGE);
 			}
 		} while (legalDouble == false); //end do-while
 		
 		//Obtain the phone number that will be used for this account
-				phoneNum = JOptionPane.showInputDialog(null, 
-						"Enter Customer's Phone Number: \n", 
-						"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
+		do {
+		phoneNum = JOptionPane.showInputDialog(null, 
+				"Enter Customer's Phone Number: \n", 
+				"ES&L Bank System", JOptionPane.QUESTION_MESSAGE);
+		} while (phoneNum == null  || phoneNum.equals(""));
 		
 		//Create the new Customer object and return it
 		newCustomer = new Customer(nameLast, custNum, acctBal, phoneNum);
