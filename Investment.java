@@ -63,7 +63,7 @@ public class Investment{
 		annualInterestRate = 0;
 		monthlyInterestRate = annualInterestRate / 12;
 		
-	}//End FutureInvestmentValue() Method
+	}//End Investment() Method
 	
 	
 	/**
@@ -86,12 +86,96 @@ public class Investment{
 		annualInterestRate = annualInterestPercent / 100;
 		monthlyInterestRate = annualInterestRate / 12;
 		
-	}//End FutureInvestmentValue(double InvestmentAmount, int Years, double AnnualInterestRate) Method
+	}//End Investment(double amount, double years, double annualInterestPercent) Method
 	
 	
 	
 	
 	/// Accessor Methods for Private Instance Variables ///
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	public double getInvestmentAmount(){
+		
+		return investmentAmount;
+		
+	}//End getInvestmentAmount() Method
+	
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	public double getYearsInvested(){
+		
+		return yearsInvested;
+		
+	}//End getYearsInvested() Method
+	
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	public double getAnnualInterestRate(){
+	
+		return annualInterestRate;
+		
+	}//End getAnnualInterestRate() Method
+	
+	
+	/**
+	 * Description
+	 * @param
+	 *   
+	 * @precondition
+	 *   
+	 * @postcondition / return
+	 *   
+	 * @exception
+	 *   
+	 * @note
+	 *   
+	 **/
+	public double getMonthlyInterestRate(){
+		
+		return monthlyInterestRate;
+		
+	}//End getMonthlyInterestRate() Method
+	
+	
+	
+	
+	/// Mutator Methods for Private Instance Variables ///
 	
 	/**
 	 * Description
@@ -150,7 +234,7 @@ public class Investment{
 	
 		annualInterestRate = annualInterestPercent / 100;
 		
-	}//End setAnnualInterestRate(double AnnualInterestRate) Method
+	}//End setAnnualInterestRate(double annualInterestPercent) Method
 	
 	
 	/**
@@ -168,93 +252,9 @@ public class Investment{
 	 **/
 	public void setMonthlyInterestRate(double monthlyInterestPercent){
 		
-		annualInterestRate = monthlyInterestPercent / 100;
+		monthlyInterestRate = monthlyInterestPercent / 100;
 		
-	}//End setAnnualInterestRate(double AnnualInterestRate) Method
-	
-	
-	
-	
-	/// Mutator Methods for Private Instance Variables ///
-	
-	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public double getInvestmentAmount(){
-		
-		return investmentAmount;
-		
-	}//End setInvestmentAmount(double InvestmentAmount) Method
-	
-	
-	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public double getYearsInvested(){
-		
-		return yearsInvested;
-		
-	}//End setYears(int Years) Method
-	
-	
-	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public double getAnnualInterestRate(){
-	
-		return annualInterestRate;
-		
-	}//End setAnnualInterestRate(double AnnualInterestRate) Method
-	
-	
-	/**
-	 * Description
-	 * @param
-	 *   
-	 * @precondition
-	 *   
-	 * @postcondition / return
-	 *   
-	 * @exception
-	 *   
-	 * @note
-	 *   
-	 **/
-	public double getMonthlyInterestRate(){
-		
-		return monthlyInterestRate;
-		
-	}//End setAnnualInterestRate(double AnnualInterestRate) Method
+	}//End setMonthlyInterestRate(double monthlyInterestPercent) Method
 	
 	
 	
