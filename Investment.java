@@ -214,7 +214,7 @@ public class Investment{
 		
 		yearsInvested = years;
 		
-	}//End setYears(int Years) Method
+	}//End setYears(double Years) Method
 	
 	
 	/**
@@ -263,7 +263,7 @@ public class Investment{
 	
 	public double caluclateFutureValue(){
 		
-		return investmentAmount * (Math.pow((1 + monthlyInterestRate), (yearsInvested * 12)));
+		return investmentAmount * Math.pow((1 + monthlyInterestRate), (yearsInvested * 12));
 		
 	}//End caluclateFutureValue() Method
 
