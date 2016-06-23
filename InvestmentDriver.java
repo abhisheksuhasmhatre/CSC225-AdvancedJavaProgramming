@@ -21,20 +21,34 @@
  * 
  ********************************************************************************************************/
 
-
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 
 
 public class InvestmentDriver{
 	
 	public static void main(String[] args){
 		
-		Investment testInvest = new Investment(10000, 1, 6.75);
-		Investment testInvest2 = new Investment(10000, 2, 5.5);
+		TextField investmentAmountTF = new TextField();
+		TextField yearsInvestedTF = new TextField();
+		TextField annualInterestRateTF = new TextField();
+		TextField futureValue = new TextField();
 		
-		System.out.println(testInvest.getMonthlyInterestRate());
-		System.out.println(testInvest.caluclateFutureValue());
-		System.out.println(testInvest2.getMonthlyInterestRate());
-		System.out.println(testInvest2.caluclateFutureValue());
+		GridPane gridPane = new GridPane();
+		
+		gridPane.setHgap(5);
+		gridPane.setVgap(5);
+		gridPane.add(new Label("Investment Amount"), 0, 0);
+		gridPane.add(investmentAmountTF, 1, 0);
+		gridPane.add(new Label("Years"), 0, 1);
+		gridPane.add(yearsInvestedTF, 1, 1);
+		gridPane.add(new Label("Annual Interest Rate"), 0, 2);
+		gridPane.add(annualInterestRateTF, 1, 2);
+		gridPane.add(new Label("Future Value"), 0, 3);
+		gridPane.add(futureValue, 1, 3);
+		
+		
 		
 	}//End Main Method
 	
